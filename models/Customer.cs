@@ -1,5 +1,7 @@
 namespace HealthClinic.models;
 
+using HealthClinic.utils;
+
 public class Customer
 {
     public Guid Id { get; set; }
@@ -16,22 +18,39 @@ public class Customer
 
     public static void MainRegisterCustomer()
     {
+        Console.WriteLine("\n--- 📝 Register Customer ---");
         RegisterCustomerMenu();
-        Console.WriteLine("Customer registered successfully");
-
+        Console.WriteLine("\n✅ Customer registered successfully");
     }
 
     public static void RegisterCustomerMenu()
     {
+        string name;
+        int ages;
+
         while (true)
         {
-            Console.Write("Enter customer name: ");
-            string name = Console.ReadLine()!;
+            Console.Write("\n👤 Enter customer name: ");
+            name = Console.ReadLine()!;
+            if (!Validator.IsEmpty(name)) continue;
             break;
         }
-        
-        Console.Write("Enter customer ages: ");
-        int ages = Convert.ToInt32(Console.ReadLine());
+
+        while (true)
+        {
+            try
+            {
+                Console.Write("\n🎂 Enter customer ages: ");
+                ages = Convert.ToInt32(Console.ReadLine());
+                if (!Validator.IsPositive(ages)) continue;
+                break;
+            }
+            catch
+            {
+                Console.WriteLine("❌ Invalid input. Please enter a number");
+                continue;
+            }
+        }
         RegisterCustomer(name, ages);
     }
 

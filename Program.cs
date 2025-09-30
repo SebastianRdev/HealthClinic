@@ -1,49 +1,57 @@
-﻿public class Program
+﻿using HealthClinic.models;
+
+public class Program
 {
     public static void Main(string[] args)
     {
-        show_menu();
+        Console.WriteLine("\n🐾 Welcome to HealthClinic System 🏥");
+        Console.WriteLine("-----------------------------------");
         menu();
     }
 
     public static void show_menu()
     {
-        Console.WriteLine("1. Register Customer");
-        Console.WriteLine("2. View Customers");
-        Console.WriteLine("3. Search Customers");
-        Console.WriteLine("4. Exit");
+        Console.WriteLine("\n📋 Main Menu:");
+        Console.WriteLine("1️⃣  Register Customer");
+        Console.WriteLine("2️⃣  View Customers");
+        Console.WriteLine("3️⃣  Search Customers");
+        Console.WriteLine("4️⃣  Exit 🚪");
     }
 
     public static void menu()
     {
         while (true)
         {
-            try {
-                Console.Write("Enter your choice: ");
+            try
+            {
+                show_menu();
+                Console.Write("\n👉 Enter your choice: ");
                 int choice = Convert.ToInt32(Console.ReadLine());
-                switch (choice){
+                switch (choice)
+                {
                     case 1:
-                        RegisterCustomer();
+                        Customer.MainRegisterCustomer();
                         break;
                     case 2:
-                        ViewCustomers();
+                        // ViewCustomers();
                         break;
                     case 3:
-                        SearchCustomers();
+                        // SearchCustomers();
                         break;
                     case 4:
+                        Console.WriteLine("\n👋 Thanks for using HealthClinic System. Goodbye! 🐶🐱");
                         break;
                     default:
-                        Console.WriteLine("Invalid choice. Please try again.");
-                        show_menu();
-                        menu();
-                        break;
+                        Console.WriteLine("\n⚠️ Invalid choice. Please try again");
+                        continue;
                 }
             }
             catch
             {
-                Console.WriteLine("Invalid input. Please enter a number.");
+                Console.WriteLine("\n❌ Invalid input. Please enter a number");
+                continue;
             }
+            break;
         }
     }
 }
