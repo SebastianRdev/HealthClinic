@@ -51,16 +51,6 @@ public class Customer
                 continue;
             }
         }
-        RegisterCustomer(name, ages);
-    }
-
-    public static void RegisterCustomer(string name, int ages)
-    {
-        Customer newCustomer = new Customer
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            Ages = ages
-        };
+        // RegisterCustomer(name, ages);
     }
 }
