@@ -1,4 +1,6 @@
 ﻿using HealthClinic.models;
+using HealthClinic.services;
+using HealthClinic.utils;
 
 public class Program
 {
@@ -18,8 +20,10 @@ public class Program
         Console.WriteLine("4️⃣  Exit 🚪");
     }
 
+    public static List<Customer> Customers = new List<Customer>();
     public static void menu()
     {
+        
         while (true)
         {
             try
@@ -30,13 +34,13 @@ public class Program
                 switch (choice)
                 {
                     case 1:
-                        Customer.MainRegisterCustomer();
+                        CustomerService.MainRegisterCustomer(Customers);
                         break;
                     case 2:
-                        // ViewCustomers();
+                        // CustomerService.ViewCustomers(Customers);
                         break;
                     case 3:
-                        // SearchCustomers();
+                        // CustomerService.SearchCustomerByName(Customers, Console.ReadLine()!);
                         break;
                     case 4:
                         Console.WriteLine("\n👋 Thanks for using HealthClinic System. Goodbye! 🐶🐱");

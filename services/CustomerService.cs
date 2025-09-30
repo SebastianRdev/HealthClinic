@@ -1,20 +1,61 @@
 namespace HealthClinic.services;
 
 using HealthClinic.models;
+using HealthClinic.utils;
 
 public class CustomerService
 {
-    private static List<Customer> Customers = new List<Customer>();
-    public static void RegisterCustomer(string name, int ages)
+    public static void MainRegisterCustomer(List<Customer> customers)
     {
-        Customer newCustomer = new Customer
+        Console.WriteLine("\n--- 📝 Register Customer ---");
+
+        Customer newCustomer = RegisterCustomerMenu();
+
+        RegisterCustomer(customers, newCustomer);
+
+        Console.WriteLine("\n✅ Customer registered successfully");
+    }
+
+    public static Customer RegisterCustomerMenu()
+    {
+        string name;
+        int ages;
+
+        while (true)
+        {
+            Console.Write("\n👤 Enter customer name: ");
+            name = Console.ReadLine()!;
+            if (!Validator.IsEmpty(name)) continue;
+            break;
+        }
+
+        while (true)
+        {
+            try
+            {
+                Console.Write("\n🎂 Enter customer ages: ");
+                ages = Convert.ToInt32(Console.ReadLine());
+                if (!Validator.IsPositive(ages)) continue;
+                break;
+            }
+            catch
+            {
+                Console.WriteLine("❌ Invalid input. Please enter a number");
+                continue;
+            }
+        }
+
+        return new Customer
         {
             Id = Guid.NewGuid(),
             Name = name,
             Ages = ages
         };
+    }
 
-        Customers.Add(newCustomer);
+    public static void RegisterCustomer(List<Customer> customers, Customer newCustomer)
+    {
+        customers.Add(newCustomer);
     }
 
     public static void ViewCustomers(List<Customer> customers)
@@ -34,11 +75,11 @@ public class CustomerService
         }
     }
 
-    public static void SearchCustomerByName()
+    public static void SearchCustomerByName(List<Customer> customers, string name)
     {
         Console.Write("\n🔍 Enter customer name to search: ");
         string searchName = Console.ReadLine()!;
-        var foundCustomers = Customers.Where(c => c.Name!.Equals(searchName, StringComparison.OrdinalIgnoreCase)).ToList();
+        var foundCustomers = customers.Where(c => c.Name!.Equals(searchName, StringComparison.OrdinalIgnoreCase)).ToList();
         if (foundCustomers.Count == 0)
         {
             Console.WriteLine("⚠️ No customers found with that name.");
