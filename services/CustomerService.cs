@@ -45,12 +45,7 @@ public class CustomerService
             }
         }
 
-        return new Customer
-        {
-            Id = Guid.NewGuid(),
-            Name = name,
-            Ages = ages
-        };
+        return new Customer(name, ages);
     }
 
     public static void RegisterCustomer(List<Customer> customers, Customer newCustomer)
@@ -63,7 +58,7 @@ public class CustomerService
         Console.WriteLine("\n--- 👥 Customer List ---");
         if (customers.Count == 0)
         {
-            Console.WriteLine("⚠️ No customers found.");
+            Console.WriteLine("⚠️  No customers found.");
             return;
         }
         foreach (var customer in customers)
@@ -82,7 +77,7 @@ public class CustomerService
         var foundCustomers = customers.Where(c => c.Name!.Equals(searchName, StringComparison.OrdinalIgnoreCase)).ToList();
         if (foundCustomers.Count == 0)
         {
-            Console.WriteLine("⚠️ No customers found with that name.");
+            Console.WriteLine("⚠️  No customers found with that name.");
             return;
         }
         ViewCustomers(foundCustomers);

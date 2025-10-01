@@ -11,16 +11,8 @@ public class Program
         menu();
     }
 
-    public static void show_menu()
-    {
-        Console.WriteLine("\n📋 Main Menu:");
-        Console.WriteLine("1️⃣  Register Customer");
-        Console.WriteLine("2️⃣  View Customers");
-        Console.WriteLine("3️⃣  Search Customers");
-        Console.WriteLine("4️⃣  Exit 🚪");
-    }
-
     public static List<Customer> Customers = new List<Customer>();
+
     public static void menu()
     {
         
@@ -28,7 +20,7 @@ public class Program
         {
             try
             {
-                show_menu();
+                ConsoleUI.show_menu();
                 Console.Write("\n👉 Enter your choice: ");
                 int choice = Convert.ToInt32(Console.ReadLine());
                 switch (choice)

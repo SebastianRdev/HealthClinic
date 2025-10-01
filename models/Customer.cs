@@ -9,4 +9,10 @@ public class Customer
     public int Ages { get; set; }
     public List<Pet> Pets { get; set; } = new List<Pet>();
 
+    public Customer(string name, int ages)
+    {
+        Id = Guid.NewGuid();
+        Name = name;
+        Ages = ages;
+    }
 }

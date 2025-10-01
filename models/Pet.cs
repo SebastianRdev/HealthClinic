@@ -1,7 +1,5 @@
-namespace HealthClinic.models
+namespace HealthClinic.models;
+public class Pet
 {
-    public class Pet
-    {
-        
-    }
+    
 }
