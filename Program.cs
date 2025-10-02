@@ -11,11 +11,12 @@ public class Program
         menu();
     }
 
-    public static List<Customer> Customers = new List<Customer>();
+    public static List<Customer> CustomerList = new List<Customer>();
+    public static Dictionary<Guid, Customer> CustomerDict = new Dictionary<Guid, Customer>();
 
     public static void menu()
     {
-        
+
         while (true)
         {
             try
@@ -26,15 +27,18 @@ public class Program
                 switch (choice)
                 {
                     case 1:
-                        CustomerService.MainRegisterCustomer(Customers);
-                        break;
+                        CustomerService.MainRegisterCustomer(CustomerList, CustomerDict);
+                        continue;
                     case 2:
-                        // CustomerService.ViewCustomers(Customers);
-                        break;
+                        CustomerService.ViewCustomers(CustomerList);
+                        continue;
                     case 3:
                         // CustomerService.SearchCustomerByName(Customers, Console.ReadLine()!);
                         break;
                     case 4:
+                        // CustomerService.Consults();
+                        break;
+                    case 5:
                         Console.WriteLine("\n👋 Thanks for using HealthClinic System. Goodbye! 🐶🐱");
                         break;
                     default:

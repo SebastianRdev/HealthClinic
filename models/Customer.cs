@@ -1,18 +1,18 @@
 namespace HealthClinic.models;
 
-using HealthClinic.utils;
 
 public class Customer
 {
     public Guid Id { get; set; }
-    public string? Name { get; set; }
-    public int Ages { get; set; }
-    public List<Pet> Pets { get; set; } = new List<Pet>();
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public List<Pet> Pets { get; set; } = [];
 
-    public Customer(string name, int ages)
+    public Customer(string name, int age, Pet pet)
     {
         Id = Guid.NewGuid();
         Name = name;
-        Ages = ages;
+        Age = age;
+        Pets = new List<Pet> { pet };
     }
 }
