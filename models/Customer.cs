@@ -8,11 +8,16 @@ public class Customer
     public int Age { get; set; }
     public List<Pet> Pets { get; set; } = [];
 
-    public Customer(string name, int age, Pet pet)
+    public Customer(string name, int age)
     {
         Id = Guid.NewGuid();
         Name = name;
         Age = age;
-        Pets = new List<Pet> { pet };
+    }
+
+    public void AddPet(Pet pet)
+    {
+        pet.Customer = this;
+        Pets.Add(pet);
     }
 }

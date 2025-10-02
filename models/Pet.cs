@@ -10,16 +10,6 @@ public class Pet
     public Customer Customer { get; set; }
 
     // Constructor
-    public Pet(string name, string species, string breed, int age, Customer customer)
-    {
-        this.Id = Guid.NewGuid();
-        this.Name = name;
-        this.Species = species;
-        this.Breed = breed;
-        this.Age = age;
-        this.Customer = customer;
-    }
-
     public Pet(string name, string species, string breed, int age)
     {
         this.Id = Guid.NewGuid();

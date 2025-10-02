@@ -33,8 +33,9 @@ public class Program
                         CustomerService.ViewCustomers(CustomerList);
                         continue;
                     case 3:
+                        CustomerService.FilterByPetAge(CustomerList);
                         // CustomerService.SearchCustomerByName(Customers, Console.ReadLine()!);
-                        break;
+                        continue;
                     case 4:
                         // CustomerService.Consults();
                         break;
