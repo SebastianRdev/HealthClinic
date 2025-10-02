@@ -122,7 +122,7 @@ public class CustomerService
             // Mostrar mascotas
             if (customer.Pets.Count > 0)
             {
-                Console.WriteLine("   --- 🐶 Pets ---");
+                Console.WriteLine("\n   --- 🐶 Pets ---");
                 foreach (var pet in customer.Pets)
                 {
                     Console.WriteLine($"   🐾 Pet ID: {pet.Id}");

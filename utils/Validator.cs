@@ -6,7 +6,7 @@ public static class Validator
     {
         if (number < 0)
         {
-            Console.WriteLine("⚠️ Please enter positive integers");
+            Console.WriteLine("⚠️  Please enter positive integers");
             return false;
         }
 
@@ -17,7 +17,7 @@ public static class Validator
     {
         if (string.IsNullOrWhiteSpace(text))
         {
-            Console.WriteLine("⚠️ Empty spaces are not allowed.");
+            Console.WriteLine("⚠️  Empty spaces are not allowed.");
             return false;
         }
 
