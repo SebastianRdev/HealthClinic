@@ -172,7 +172,7 @@ public class CustomerService
     {
         if (customer == null)
         {
-            Console.WriteLine("⚠️ No customers found.");
+            Console.WriteLine("⚠️  No customers found.");
             return;
         }
 
@@ -254,19 +254,21 @@ public class CustomerService
 
     public static void ShowPetsByAge(IEnumerable<dynamic> customersWithPets, int petAge)
     {
+
+        Console.WriteLine("\n📋 --- Customer with Pets of Specified Age ---");
         foreach (var c in customersWithPets)
         {
-            Console.WriteLine("\n📋 --- Customer with Pets of Specified Age ---");
+
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine($"\n👤 Customer: {c.Customer.Name}");
             Console.WriteLine($"📊 {petAge} year old pets: {c.Pets.Count}");
-            Console.WriteLine("----------------------------------------------------");
 
             foreach (var pet in c.Pets)
             {
                 Console.WriteLine($"   🐾 {pet.Name} ({pet.Species}, {pet.Breed})");
             }
         }
+        Console.WriteLine("\n----------------------------------------------------");
     }
 
     public static void YoungestOrOlderCustomer(List<Customer> CustomerList)
@@ -306,7 +308,7 @@ public class CustomerService
                     selectedCustomer = OlderCustomer(CustomerList);
                     break;
                 default:
-                    Console.WriteLine("⚠️ Invalid choice. Please try again");
+                    Console.WriteLine("⚠️  Invalid choice. Please try again");
                     continue;
             }
             ViewSingleCustomer(selectedCustomer);

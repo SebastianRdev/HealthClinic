@@ -16,12 +16,13 @@ public class PetService
         Console.WriteLine("\n--- 🐾 Pets List ---");
         foreach (var pet in PetList)
         {
-            Console.WriteLine($"\nID: {pet.Id}");
-            Console.WriteLine($"Name: {pet.Name}");
-            Console.WriteLine($"Species: {pet.Species}");
-            Console.WriteLine($"Breed: {pet.Breed}");
-            Console.WriteLine($"Age: {pet.Age}");
-            Console.WriteLine($"Owner: {pet.Owner.Name} (ID: {pet.Owner.Id})");
+            Console.WriteLine($"\n🆔 ID: {pet.Id}");
+            Console.WriteLine($"🐶 Name: {pet.Name}");
+            Console.WriteLine($"📚 Species: {pet.Species}");
+            Console.WriteLine($"🐈 Breed: {pet.Breed}");
+            Console.WriteLine($"🎂 Age: {pet.Age} años");
+            Console.WriteLine($"👤 Owner: {pet.Owner.Name} (🆔 {pet.Owner.Id})");
+
         }
     }
 
@@ -51,7 +52,7 @@ public class PetService
         {
             try
             {
-                Console.WriteLine("In what order?: \n1. Ascending \n2. Descending");
+                Console.WriteLine("\nIn what order?: \n1. Ascending \n2. Descending");
                 order = Convert.ToInt32(Console.ReadLine());
                 if (!Validator.IsPositive(order)) continue;
                 break;
@@ -75,7 +76,7 @@ public class PetService
                 SortBySpecies(PetList, order);
                 break;
             default:
-                Console.WriteLine("⚠️ Invalid choice. Please try again");
+                Console.WriteLine("⚠️  Invalid choice. Please try again");
                 break;
         }
     }
@@ -123,7 +124,7 @@ public class PetService
     {
         if (PetList.Count == 0)
         {
-            Console.WriteLine("\n⚠️ No pets found.");
+            Console.WriteLine("\n⚠️  No pets found");
             return;
         }
 
@@ -161,7 +162,7 @@ public class PetService
 
         if (result.Count == 0)
         {
-            Console.WriteLine("\n⚠️ No clients found with a 3-year-old dog.");
+            Console.WriteLine("\n⚠️  No customers found with a 3-year-old dog");
             return;
         }
 
@@ -196,6 +197,6 @@ public class PetService
         {
             Console.WriteLine($"Species: {species.Species}, Number of pets: {species.Count}");
         }
-        Console.WriteLine("----------------------------------------------------");
+        Console.WriteLine("\n----------------------------------------------------");
     }
 }
