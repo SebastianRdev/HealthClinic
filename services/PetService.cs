@@ -131,8 +131,14 @@ public class PetService
             .GroupBy(p => p.Species)
             .OrderBy(g => g.Key);
 
+        ShowGroupPetsBySpecies(groupedPets);
+    }
+
+    public static void ShowGroupPetsBySpecies(IEnumerable<IGrouping<string, Pet>> groupedPets)
+    {
         Console.WriteLine("\n--- 🐾 Pets Grouped by Species ---");
         Console.WriteLine("----------------------------------------------------");
+
         foreach (var group in groupedPets)
         {
             Console.WriteLine($"\n🐾 Species: {group.Key} ({group.Count()} pets)");
@@ -159,6 +165,11 @@ public class PetService
             return;
         }
 
+        ShowCombinedConsultation(result);
+    }
+
+    public static void ShowCombinedConsultation(IEnumerable<dynamic> result)
+    {
         Console.WriteLine("\n--- 🐶 Clients with a 3-year-old dog ---");
         Console.WriteLine("----------------------------------------------------");
         foreach (var entry in result)
@@ -171,12 +182,16 @@ public class PetService
     public static void PetsOfEachSpecies(List<Pet> PetList)
     {
         var speciesCount = PetList.GroupBy(p => p.Species)
-            .Select(g => new { Species = g.Key, Count = g.Count() })
-            .ToList();
-        
+            .Select(g => new { Species = g.Key, Count = g.Count() }).ToList();
+
+        ShowPetsOfEachSpecies(speciesCount);
+    }
+
+    public static void ShowPetsOfEachSpecies(IEnumerable<dynamic> speciesCount)
+    {
         Console.WriteLine("\n--- 🐾 Pets of Each Species ---");
         Console.WriteLine("----------------------------------------------------");
-        Console.WriteLine($"\n🐾 Total different species of pets: {speciesCount.Count}");
+        Console.WriteLine($"\n🐾 Total different species of pets: {speciesCount.Count()}");
         foreach (var species in speciesCount)
         {
             Console.WriteLine($"Species: {species.Species}, Number of pets: {species.Count}");
