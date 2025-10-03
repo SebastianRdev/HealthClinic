@@ -7,7 +7,7 @@ public class Pet
     public string Species { get; set; }
     public string Breed { get; set; }
     public int Age { get; set; }
-    public Customer Customer { get; set; }
+    public Customer Owner { get; set; }
 
     // Constructor
     public Pet(string name, string species, string breed, int age)

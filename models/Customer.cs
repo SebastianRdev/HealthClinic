@@ -6,18 +6,18 @@ public class Customer
     public Guid Id { get; set; }
     public string Name { get; set; }
     public int Age { get; set; }
+    public string Address { get; set; }
+    public string Phone { get; set; }
     public List<Pet> Pets { get; set; } = [];
 
-    public Customer(string name, int age)
+    // Constructor
+    public Customer(string name, int age, string address, string phone, List<Pet>? pets)
     {
         Id = Guid.NewGuid();
         Name = name;
         Age = age;
-    }
-
-    public void AddPet(Pet pet)
-    {
-        pet.Customer = this;
-        Pets.Add(pet);
+        Address = address;
+        Phone = phone;
+        Pets = pets ?? new List<Pet>();
     }
 }

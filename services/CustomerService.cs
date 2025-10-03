@@ -5,11 +5,11 @@ using HealthClinic.utils;
 
 public class CustomerService
 {
-    public static void MainRegisterCustomer(List<Customer> CustomerList, Dictionary<Guid, Customer> CustomerDict)
+    public static void MainRegisterCustomer(List<Customer> CustomerList, Dictionary<Guid, Customer> CustomerDict, List<Pet> pets)
     {
         Console.WriteLine("\n--- 📝 Register Customer ---");
 
-        Customer newCustomer = RegisterCustomerMenu();
+        Customer newCustomer = RegisterCustomerMenu(pets);
 
         RegisterCustomer(CustomerList, CustomerDict, newCustomer);
 
@@ -17,18 +17,16 @@ public class CustomerService
     }
 
 
-    public static Customer RegisterCustomerMenu()
+    public static Customer RegisterCustomerMenu(List<Pet> globalPets)
     {
         string name;
         int age;
-        string petName;
-        string petSpecies;
-        string petBreed;
-        int petAge;
+        string address;
+        string phone;
 
         while (true)
         {
-            Console.Write("\n👤 Enter customer name: ");
+            Console.Write("\n👤 Enter the customer's name: ");
             name = Console.ReadLine()!;
             if (!Validator.IsEmpty(name)) continue;
             break;
@@ -38,7 +36,7 @@ public class CustomerService
         {
             try
             {
-                Console.Write("\n🎂 Enter customer ages: ");
+                Console.Write("\n🎂 Enter the customer's age: ");
                 age = Convert.ToInt32(Console.ReadLine());
                 if (!Validator.IsPositive(age)) continue;
                 break;
@@ -50,50 +48,83 @@ public class CustomerService
             }
         }
 
-        // Pet details
         while (true)
         {
-            Console.Write("\n📛 Enter the pet's name: ");
-            petName = Console.ReadLine()!;
-            if (!Validator.IsEmpty(petName)) continue;
+            Console.Write("\n🏠 Enter the customer's address: ");
+            address = Console.ReadLine()!;
+            if (!Validator.IsEmpty(address)) continue;
             break;
         }
 
         while (true)
         {
-            Console.Write("\n🐕 Enter the pet's species: ");
-            petSpecies = Console.ReadLine()!;
-            if (!Validator.IsEmpty(petSpecies)) continue;
+            Console.Write("\n📞 Enter the customer's phone: ");
+            phone = Console.ReadLine()!;
+            if (!Validator.IsEmpty(phone)) continue;
             break;
         }
 
-        
-        while (true)
-        {
-            Console.Write("\n🐾 Enter the pet's breed: ");
-            petBreed = Console.ReadLine()!;
-            if (!Validator.IsEmpty(petBreed)) continue;
-            break;
-        }
+        List<Pet> customerPets = new List<Pet>();
 
-        while (true)
+        do
         {
-            try
+            string petName, petSpecies, petBreed;
+            int petAge;
+
+            while (true)
             {
-                Console.Write("\n🎂 Enter the pet's age: ");
-                petAge = Convert.ToInt32(Console.ReadLine());
-                if (!Validator.IsPositive(petAge)) continue;
+                Console.Write("\n📛 Enter the pet's name: ");
+                petName = Console.ReadLine()!;
+                if (!Validator.IsEmpty(petName)) continue;
                 break;
             }
-            catch
+
+            while (true)
             {
-                Console.WriteLine("❌ Invalid input. Please enter a number");
-                continue;
+                Console.Write("\n🐕 Enter the pet's species: ");
+                petSpecies = Console.ReadLine()!;
+                if (!Validator.IsEmpty(petSpecies)) continue;
+                break;
             }
+
+            while (true)
+            {
+                Console.Write("\n🐾 Enter the pet's breed: ");
+                petBreed = Console.ReadLine()!;
+                if (!Validator.IsEmpty(petBreed)) continue;
+                break;
+            }
+
+            while (true)
+            {
+                try
+                {
+                    Console.Write("\n🎂 Enter the pet's age: ");
+                    petAge = Convert.ToInt32(Console.ReadLine());
+                    if (!Validator.IsPositive(petAge)) continue;
+                    break;
+                }
+                catch
+                {
+                    Console.WriteLine("❌ Invalid input. Please enter a number");
+                    continue;
+                }
+            }
+
+            Pet pet = new Pet(petName, petSpecies, petBreed, petAge);
+            customerPets.Add(pet);
+            globalPets.Add(pet);
+        
+            Console.Write("\nDo you want to add another pet? (y/n): ");
+            string response = Console.ReadLine()!.Trim().ToLower();
+            if (response != "y") break;
+        } while (true);
+
+        Customer customer = new Customer(name, age, address, phone, customerPets);
+        foreach (var pet in customerPets)
+        {
+            pet.Owner = customer;
         }
-        Pet pet = new Pet(petName, petSpecies, petBreed, petAge);
-        Customer customer = new Customer(name, age);
-        customer.AddPet(pet);
         return customer;
     }
 
@@ -117,9 +148,10 @@ public class CustomerService
             Console.WriteLine($"\n🆔 ID: {customer.Id}");
             Console.WriteLine($"👤 Name: {customer.Name}");
             Console.WriteLine($"🎂 Age: {customer.Age}");
+            Console.WriteLine($"🏠 Address: {customer.Address}");
+            Console.WriteLine($"📞 Phone: {customer.Phone}");
             Console.WriteLine($"🐾 Pets Count: {customer.Pets.Count}");
 
-            // Mostrar mascotas
             if (customer.Pets.Count > 0)
             {
                 Console.WriteLine("\n   --- 🐶 Pets ---");
@@ -152,7 +184,7 @@ public class CustomerService
 
 
     // FILTERS
-    public static void FilterByPetAge(List<Customer> CustomerList)
+    public static void FilterCustomersByPetAge(List<Customer> CustomerList)
     {
         Console.Write("\n🔍 Enter pet age to filter customers: ");
         int petAge;
@@ -200,4 +232,6 @@ public class CustomerService
             }
         }
     }
+
+    
 }

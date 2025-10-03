@@ -13,6 +13,7 @@ public class Program
 
     public static List<Customer> CustomerList = new List<Customer>();
     public static Dictionary<Guid, Customer> CustomerDict = new Dictionary<Guid, Customer>();
+    public static List<Pet> pets = new List<Pet>();
 
     public static void menu()
     {
@@ -21,24 +22,23 @@ public class Program
         {
             try
             {
-                ConsoleUI.show_menu();
+                ConsoleUI.ShowMenu();
                 Console.Write("\n👉 Enter your choice: ");
                 int choice = Convert.ToInt32(Console.ReadLine());
                 switch (choice)
                 {
                     case 1:
-                        CustomerService.MainRegisterCustomer(CustomerList, CustomerDict);
+                        CustomerService.MainRegisterCustomer(CustomerList, CustomerDict, pets);
                         continue;
                     case 2:
                         CustomerService.ViewCustomers(CustomerList);
                         continue;
                     case 3:
-                        CustomerService.FilterByPetAge(CustomerList);
-                        // CustomerService.SearchCustomerByName(Customers, Console.ReadLine()!);
+                        QuerysMenu();
                         continue;
                     case 4:
-                        // CustomerService.Consults();
-                        break;
+                        PetService.ViewPets(pets);
+                        continue;
                     case 5:
                         Console.WriteLine("\n👋 Thanks for using HealthClinic System. Goodbye! 🐶🐱");
                         break;
@@ -53,6 +53,44 @@ public class Program
                 continue;
             }
             break;
+        }
+    }
+
+    public static void QuerysMenu()
+    {
+        while (true)
+        {
+            try
+            {
+                ConsoleUI.ShowQueriesMenu();
+                Console.Write("\n👉 Enter your choice: ");
+                int choice = Convert.ToInt32(Console.ReadLine());
+                switch (choice)
+                {
+                    case 1:
+                        CustomerService.FilterCustomersByPetAge(CustomerList);
+                        continue;
+                    case 2:
+                        PetService.MainSort(pets);
+                        continue;
+                    case 3:
+                        PetService.GroupPetsBySpecies(pets);
+                        continue;
+                    case 4:
+                        PetService.CombinedConsultation(CustomerList);
+                        continue;
+                    case 5:
+                        return; // Back to Main Menu
+                    default:
+                        Console.WriteLine("\n⚠️ Invalid choice. Please try again");
+                        continue;
+                }
+            }
+            catch
+            {
+                Console.WriteLine("\n❌ Invalid input. Please enter a number");
+                continue;
+            }
         }
     }
 }
