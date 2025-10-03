@@ -16,7 +16,6 @@ public class CustomerService
         Console.WriteLine("\n✅ Customer registered successfully");
     }
 
-
     public static Customer RegisterCustomerMenu(List<Pet> globalPets)
     {
         string name;
@@ -71,6 +70,7 @@ public class CustomerService
             string petName, petSpecies, petBreed;
             int petAge;
 
+            Console.WriteLine("\n--- 📝 Register Pet 🐕 ---");
             while (true)
             {
                 Console.Write("\n📛 Enter the pet's name: ");
@@ -89,7 +89,7 @@ public class CustomerService
 
             while (true)
             {
-                Console.Write("\n🐾 Enter the pet's breed: ");
+                Console.Write("\n🐾 Enter the pet's breed(If you don't know, write: unknown): ");
                 petBreed = Console.ReadLine()!;
                 if (!Validator.IsEmpty(petBreed)) continue;
                 break;
@@ -114,7 +114,7 @@ public class CustomerService
             Pet pet = new Pet(petName, petSpecies, petBreed, petAge);
             customerPets.Add(pet);
             globalPets.Add(pet);
-        
+
             Console.Write("\nDo you want to add another pet? (y/n): ");
             string response = Console.ReadLine()!.Trim().ToLower();
             if (response != "y") break;
@@ -139,7 +139,7 @@ public class CustomerService
         Console.WriteLine("\n--- 👥 Customer List ---");
         if (CustomerList.Count == 0)
         {
-            Console.WriteLine("⚠️  No customers found.");
+            Console.WriteLine("⚠️  No customers found");
             return;
         }
 
@@ -168,6 +168,36 @@ public class CustomerService
         }
     }
 
+    public static void ViewSingleCustomer(Customer? customer)
+    {
+        if (customer == null)
+        {
+            Console.WriteLine("⚠️ No customers found.");
+            return;
+        }
+
+        Console.WriteLine($"\n🆔 ID: {customer.Id}");
+        Console.WriteLine($"👤 Name: {customer.Name}");
+        Console.WriteLine($"🎂 Age: {customer.Age}");
+        Console.WriteLine($"🏠 Address: {customer.Address}");
+        Console.WriteLine($"📞 Phone: {customer.Phone}");
+        Console.WriteLine($"🐾 Pets Count: {customer.Pets.Count}");
+
+        if (customer.Pets.Count > 0)
+        {
+            Console.WriteLine("\n   --- 🐶 Pets ---");
+            foreach (var pet in customer.Pets)
+            {
+                Console.WriteLine($"   🐾 Pet ID: {pet.Id}");
+                Console.WriteLine($"   📛 Name: {pet.Name}");
+                Console.WriteLine($"   🐕 Species: {pet.Species}");
+                Console.WriteLine($"   🐾 Breed: {pet.Breed}");
+                Console.WriteLine($"   🎂 Age: {pet.Age}");
+                Console.WriteLine();
+            }
+        }
+    }
+
 
     public static void SearchCustomerByName(List<Customer> CustomerList, string name)
     {
@@ -179,7 +209,10 @@ public class CustomerService
             Console.WriteLine("⚠️  No customers found with that name.");
             return;
         }
+        Console.WriteLine($"\n📋 --- Customers Found with Name: {searchName} ---");
+        Console.WriteLine("----------------------------------------------------");
         ViewCustomers(foundCustomers);
+        Console.WriteLine("----------------------------------------------------");
     }
 
 
@@ -223,8 +256,11 @@ public class CustomerService
     {
         foreach (var c in customersWithPets)
         {
-            Console.WriteLine($"\n👤 Cliente: {c.Customer.Name}");
-            Console.WriteLine($"📊 Mascotas de {petAge} años: {c.Pets.Count}");
+            Console.WriteLine("\n📋 --- Customer with Pets of Specified Age ---");
+            Console.WriteLine("----------------------------------------------------");
+            Console.WriteLine($"\n👤 Customer: {c.Customer.Name}");
+            Console.WriteLine($"📊 {petAge} year old pets: {c.Pets.Count}");
+            Console.WriteLine("----------------------------------------------------");
 
             foreach (var pet in c.Pets)
             {
@@ -233,5 +269,93 @@ public class CustomerService
         }
     }
 
-    
+    public static void YoungestOrOlderCustomer(List<Customer> CustomerList)
+    {
+        if (CustomerList.Count == 0)
+        {
+            Console.WriteLine("\n⚠️  No customers found.");
+            return;
+        }
+
+        int choose;
+        while (true)
+        {
+            try
+            {
+                Console.WriteLine("Would you like to filter it?: \n1. Younger \n2. Older");
+                choose = Convert.ToInt32(Console.ReadLine());
+                if (!Validator.IsPositive(choose)) continue;
+                break;
+            }
+            catch
+            {
+                Console.WriteLine("❌ Invalid input. Please enter a number");
+                continue;
+            }
+        }
+
+        while (true)
+        {
+            Customer? selectedCustomer = null;
+            switch (choose)
+            {
+                case 1:
+                    selectedCustomer = YoungerCustomer(CustomerList);
+                    break;
+                case 2:
+                    selectedCustomer = OlderCustomer(CustomerList);
+                    break;
+                default:
+                    Console.WriteLine("⚠️ Invalid choice. Please try again");
+                    continue;
+            }
+            ViewSingleCustomer(selectedCustomer);
+            Console.WriteLine("----------------------------------------------------");
+            break;
+        }
+    }
+
+    public static Customer? YoungerCustomer(List<Customer> customerList)
+    {
+        Console.WriteLine("\n--- 👤 Youngest Customer ---");
+        Console.WriteLine("----------------------------------------------------");
+        return customerList.OrderBy(c => c.Age).First();
+    }
+
+    public static Customer? OlderCustomer(List<Customer> customerList)
+    {
+        Console.WriteLine("\n--- 👤 Oldest Customer ---");
+        Console.WriteLine("----------------------------------------------------");
+        return customerList.OrderByDescending(c => c.Age).First();
+    }
+
+    public static void CustomerUnknownPetBreed(List<Customer> customerList)
+    {
+        var selectedCustomers = customerList.Where(c => c.Pets.Any(p => p.Breed == "unknown")).ToList();
+        if (selectedCustomers.Count == 0)
+        {
+            Console.WriteLine("⚠️  No customers found with unknown pet breed");
+            return;
+        }
+        Console.WriteLine("\n📋 --- Customers with Unknown Pet Breed ---");
+        Console.WriteLine("----------------------------------------------------");
+        ViewCustomers(selectedCustomers);
+        Console.WriteLine("----------------------------------------------------");
+    }
+
+    public static void CustomersInCapitalityAlphabetically(List<Customer> customerList)
+    {
+        var selectedCustomers = customerList.OrderBy(c => c.Name.ToUpper()).ToList();
+
+        Console.WriteLine("\n📋 --- Customers in Alphabetical Order (UPPERCASE) ---");
+        Console.WriteLine("----------------------------------------------------");
+
+        int index = 1;
+        foreach (var customer in selectedCustomers)
+        {
+            Console.WriteLine($"👤 {index++}. Name: {customer.Name.ToUpper()}");
+        }
+
+        Console.WriteLine("----------------------------------------------------");
+    }
 }

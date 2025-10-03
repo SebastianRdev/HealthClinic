@@ -82,32 +82,41 @@ public class PetService
 
     public static void SortByName(List<Pet> PetList, int order)
     {
+        Console.WriteLine("\n--- 🐾 Pets Sorted by Name ---");
+        Console.WriteLine("----------------------------------------------------");
         List<Pet> sortedPets;
         if (order == 1)
             sortedPets = PetList.OrderBy(c => c.Name).ToList();
         else
             sortedPets = PetList.OrderByDescending(c => c.Name).ToList();
         ViewPets(sortedPets);
+        Console.WriteLine("----------------------------------------------------");
     }
 
     public static void SortByAge(List<Pet> PetList, int order)
     {
+        Console.WriteLine("\n--- 🐾 Pets Sorted by Age ---");
+        Console.WriteLine("----------------------------------------------------");
         List<Pet> sortedPets;
         if (order == 1)
             sortedPets = PetList.OrderBy(c => c.Age).ToList();
         else
             sortedPets = PetList.OrderByDescending(c => c.Age).ToList();
         ViewPets(sortedPets);
+        Console.WriteLine("----------------------------------------------------");
     }
 
     public static void SortBySpecies(List<Pet> PetList, int order)
     {
+        Console.WriteLine("\n--- 🐾 Pets Sorted by Species ---");
+        Console.WriteLine("----------------------------------------------------");
         List<Pet> sortedPets;
         if (order == 1)
             sortedPets = PetList.OrderBy(c => c.Species).ToList();
         else
             sortedPets = PetList.OrderByDescending(c => c.Species).ToList();
         ViewPets(sortedPets);
+        Console.WriteLine("----------------------------------------------------");
     }
 
     public static void GroupPetsBySpecies(List<Pet> PetList)
@@ -119,9 +128,11 @@ public class PetService
         }
 
         var groupedPets = PetList
-            .GroupBy(p => p.Species) // agrupamos por especie
-            .OrderBy(g => g.Key);   // opcional: orden alfabético
+            .GroupBy(p => p.Species)
+            .OrderBy(g => g.Key);
 
+        Console.WriteLine("\n--- 🐾 Pets Grouped by Species ---");
+        Console.WriteLine("----------------------------------------------------");
         foreach (var group in groupedPets)
         {
             Console.WriteLine($"\n🐾 Species: {group.Key} ({group.Count()} pets)");
@@ -132,6 +143,7 @@ public class PetService
                 Console.WriteLine($"      👤 Owner: {pet.Owner?.Name ?? "No owner"}");
             }
         }
+        Console.WriteLine("----------------------------------------------------");
     }
 
     public static void CombinedConsultation(List<Customer> CustomerList)
@@ -148,9 +160,27 @@ public class PetService
         }
 
         Console.WriteLine("\n--- 🐶 Clients with a 3-year-old dog ---");
+        Console.WriteLine("----------------------------------------------------");
         foreach (var entry in result)
         {
             Console.WriteLine($"👤 Name: {entry.Name}, 📞 Phone: {entry.Phone}");
         }
+        Console.WriteLine("----------------------------------------------------");
+    }
+
+    public static void PetsOfEachSpecies(List<Pet> PetList)
+    {
+        var speciesCount = PetList.GroupBy(p => p.Species)
+            .Select(g => new { Species = g.Key, Count = g.Count() })
+            .ToList();
+        
+        Console.WriteLine("\n--- 🐾 Pets of Each Species ---");
+        Console.WriteLine("----------------------------------------------------");
+        Console.WriteLine($"\n🐾 Total different species of pets: {speciesCount.Count}");
+        foreach (var species in speciesCount)
+        {
+            Console.WriteLine($"Species: {species.Species}, Number of pets: {species.Count}");
+        }
+        Console.WriteLine("----------------------------------------------------");
     }
 }

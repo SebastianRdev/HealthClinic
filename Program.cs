@@ -43,7 +43,7 @@ public class Program
                         Console.WriteLine("\n👋 Thanks for using HealthClinic System. Goodbye! 🐶🐱");
                         break;
                     default:
-                        Console.WriteLine("\n⚠️ Invalid choice. Please try again");
+                        Console.WriteLine("\n⚠️  Invalid choice. Please try again");
                         continue;
                 }
             }
@@ -80,17 +80,30 @@ public class Program
                         PetService.CombinedConsultation(CustomerList);
                         continue;
                     case 5:
-                        return; // Back to Main Menu
+                        CustomerService.YoungestOrOlderCustomer(CustomerList);
+                        continue;
+                    case 6:
+                        PetService.PetsOfEachSpecies(pets);
+                        continue;
+                    case 7:
+                        CustomerService.CustomerUnknownPetBreed(CustomerList);
+                        continue;
+                    case 8:
+                        CustomerService.CustomersInCapitalityAlphabetically(CustomerList);
+                        continue;
+                    case 9:
+                        break; // Back the main menu
                     default:
-                        Console.WriteLine("\n⚠️ Invalid choice. Please try again");
+                        Console.WriteLine("\n⚠️  Invalid choice. Please try again");
                         continue;
                 }
             }
-            catch
+            catch(Exception e)
             {
-                Console.WriteLine("\n❌ Invalid input. Please enter a number");
+                Console.WriteLine("\n❌ Invalid input. Please enter a number, error: ",e);
                 continue;
             }
+            break;
         }
     }
 }
