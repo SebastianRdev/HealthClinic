@@ -18,4 +18,21 @@ public class Pet
         this.Breed = breed;
         this.Age = age;
     }
+
+    public static void ShowInformation(Pet pet)
+    {
+        Console.WriteLine($"\n🐾 Pet ID: {pet.Id}");
+        Console.WriteLine($"   Name: {pet.Name}");
+        Console.WriteLine($"   Species: {pet.Species}");
+        Console.WriteLine($"   Breed: {pet.Breed}");
+        Console.WriteLine($"   Age: {pet.Age} years old");
+        if (pet.Owner != null)
+        {
+            Console.WriteLine($"   Owner: {pet.Owner.Name} (ID: {pet.Owner.Id})");
+        }
+        else
+        {
+            Console.WriteLine("   Owner: None");
+        }
+    }
 }
