@@ -1,6 +1,8 @@
 namespace HealthClinic.models;
 
-public class Pet : Animal
+using HealthClinic.interfaces;
+
+public class Pet : Animal, IRegistrable
 {
     public Guid Id { get; set; }
     public string Breed { get; set; }
@@ -32,5 +34,16 @@ public class Pet : Animal
         {
             Console.WriteLine("   Owner: None");
         }
+    }
+
+    public static void PlaySound()
+    {
+        Console.WriteLine($"\nThe dog makes a sound: Woof!");
+        Console.WriteLine($"\nThe cat makes a sound: Meow!");
+    }
+
+    public void Register()
+    {
+        Console.WriteLine($"\n✅ Customer {Name} registered successfully with ID: {Id}");
     }
 }

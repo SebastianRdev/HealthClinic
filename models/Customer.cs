@@ -1,8 +1,9 @@
 namespace HealthClinic.models;
 
+using HealthClinic.interfaces;
 using HealthClinic.utils;
 
-public class Customer
+public class Customer : IRegistrable
 {
     private Guid _id;
     private string _name;
@@ -67,7 +68,6 @@ public class Customer
         private set => _pets = value ?? new List<Pet>();
     }
 
-
     public static void ShowInformation(Customer customer)
     {
         Console.WriteLine($"\n👤 Customer ID: {customer.Id}");
@@ -87,5 +87,10 @@ public class Customer
         {
             Console.WriteLine("Pets: None");
         }
+    }
+
+    public void Register()
+    {
+        Console.WriteLine($"\n✅ Customer {Name} registered successfully with ID: {Id}");
     }
 }

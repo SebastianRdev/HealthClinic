@@ -8,7 +8,6 @@ public class Animal
 
     public static void PlaySound()
     {
-        Console.WriteLine($"\nThe dog makes a sound: Woof!");
-        Console.WriteLine($"\nThe cat makes a sound: Meow!");
+        Console.WriteLine($"\nThe dog makes a sound: Woof!");  
     }
 }
