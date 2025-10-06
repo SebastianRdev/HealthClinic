@@ -13,7 +13,7 @@ public class CustomerService
 
         RegisterCustomer(CustomerList, CustomerDict, newCustomer);
 
-        Console.WriteLine("\n✅ Customer registered successfully");
+        newCustomer.Register();
     }
 
     public static Customer RegisterCustomerMenu(List<Pet> globalPets)
@@ -114,6 +114,7 @@ public class CustomerService
             Pet pet = new Pet(petName, petSpecies, petBreed, petAge);
             customerPets.Add(pet);
             globalPets.Add(pet);
+            pet.Register();
 
             Console.Write("\nDo you want to add another pet? (y/n): ");
             string response = Console.ReadLine()!.Trim().ToLower();

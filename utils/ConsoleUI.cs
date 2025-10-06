@@ -1,6 +1,8 @@
 namespace HealthClinic.utils;
 
-public class ConsoleUI
+using HealthClinic.interfaces;
+
+public class ConsoleUI : IConsoleUI
 {
     public static void ShowMenu()
     {

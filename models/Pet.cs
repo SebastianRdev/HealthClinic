@@ -7,8 +7,7 @@ public class Pet : Animal, IRegistrable, IEntity
 {
     public Guid Id { get; private set; }
     public string Breed { get; set; }
-    public int Age { get; set; }
-    public Customer Owner { get; set; }
+    public Customer? Owner { get; set; }
 
     // Constructor
     public Pet(string name, string species, string breed, int age)
@@ -45,6 +44,6 @@ public class Pet : Animal, IRegistrable, IEntity
 
     public void Register()
     {
-        Console.WriteLine($"\n✅ Customer {Name} registered successfully with ID: {Id}");
+        Console.WriteLine($"\n✅ Pet {Name} registered successfully with ID: {Id}");
     }
 }

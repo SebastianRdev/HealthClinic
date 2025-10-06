@@ -3,7 +3,7 @@ namespace HealthClinic.models;
 using HealthClinic.interfaces;
 using HealthClinic.utils;
 
-public class Customer : IRegistrable, IEntity
+public class Customer : IRegistrable, IEntity, INotificable
 {
     public Guid Id { get; private set; } = Guid.NewGuid();
     private string _name;
@@ -90,5 +90,10 @@ public class Customer : IRegistrable, IEntity
     public void Register()
     {
         Console.WriteLine($"\n✅ Customer {Name} registered successfully with ID: {Id}");
+    }
+
+    public void SendNotification()
+    {
+        // Implementation
     }
 }
