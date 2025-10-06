@@ -1,10 +1,11 @@
 namespace HealthClinic.models;
 
 using HealthClinic.interfaces;
+using HealthClinic.models;
 
-public class Pet : Animal, IRegistrable
+public class Pet : Animal, IRegistrable, IEntity
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; private set; }
     public string Breed { get; set; }
     public int Age { get; set; }
     public Customer Owner { get; set; }

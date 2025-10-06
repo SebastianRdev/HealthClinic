@@ -1,6 +1,6 @@
 namespace HealthClinic.models;
 
-public class Vaccination : VeterinaryService
+public class Vaccination : VeterinarianService
 {
     public override void Attend()
     {

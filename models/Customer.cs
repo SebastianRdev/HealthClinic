@@ -3,9 +3,9 @@ namespace HealthClinic.models;
 using HealthClinic.interfaces;
 using HealthClinic.utils;
 
-public class Customer : IRegistrable
+public class Customer : IRegistrable, IEntity
 {
-    private Guid _id;
+    public Guid Id { get; private set; } = Guid.NewGuid();
     private string _name;
     private int _age;
     private string _address;
@@ -15,7 +15,6 @@ public class Customer : IRegistrable
     // Constructor
     public Customer(string name, int age, string address, string phone, List<Pet>? pets)
     {
-        _id = Guid.NewGuid();
         _name = name;
         _age = age;
         _address = address;
@@ -23,7 +22,6 @@ public class Customer : IRegistrable
         _pets = pets ?? new List<Pet>();
     }
 
-    public Guid Id => _id;
     public string Name
     {
         get => _name;

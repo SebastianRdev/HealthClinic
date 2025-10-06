@@ -1,6 +1,6 @@
 namespace HealthClinic.models;
 
-public abstract class VeterinaryService
+public abstract class VeterinarianService
 {
     public abstract void Attend();
 }

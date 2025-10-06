@@ -1,7 +1,8 @@
 ﻿using HealthClinic.models;
 using HealthClinic.services;
 using HealthClinic.utils;
-
+using HealthClinic.repositories;
+using HealthClinic.data;
 public class Program
 {
     public static void Main(string[] args)
@@ -9,11 +10,16 @@ public class Program
         Console.WriteLine("\n🐾 Welcome to HealthClinic System 🏥");
         Console.WriteLine("-----------------------------------");
         menu();
+
+        
     }
 
-    public static List<Customer> CustomerList = new List<Customer>();
-    public static Dictionary<Guid, Customer> CustomerDict = new Dictionary<Guid, Customer>();
-    public static List<Pet> pets = new List<Pet>();
+    static List<Veterinarian> veterinarianList = new Repository<Veterinarian>().GetAll();
+    static List<Customer> customerList = new Repository<Customer>().GetAll();
+    static List<Pet> petList = new Repository<Pet>().GetAll();
+    // static List<Customer> customersDict = new RepositoryDict<Customer>().GetAll();
+    static Dictionary<Guid, Customer> customerDict = new RepositoryDict<Customer>().GetDictionary();
+
 
     public static void menu()
     {
@@ -28,16 +34,16 @@ public class Program
                 switch (choice)
                 {
                     case 1:
-                        CustomerService.MainRegisterCustomer(CustomerList, CustomerDict, pets);
+                        CustomerService.MainRegisterCustomer(customerList, customerDict, petList);
                         continue;
                     case 2:
-                        CustomerService.ViewCustomers(CustomerList);
+                        CustomerService.ViewCustomers(customerList);
                         continue;
                     case 3:
                         QuerysMenu();
                         continue;
                     case 4:
-                        PetService.ViewPets(pets);
+                        PetService.ViewPets(petList);
                         continue;
                     case 5:
                         Console.WriteLine("\n👋 Thanks for using HealthClinic System. Goodbye! 🐶🐱");
@@ -68,28 +74,28 @@ public class Program
                 switch (choice)
                 {
                     case 1:
-                        CustomerService.FilterCustomersByPetAge(CustomerList);
+                        CustomerService.FilterCustomersByPetAge(customerList);
                         continue;
                     case 2:
-                        PetService.MainSort(pets);
+                        PetService.MainSort(petList);
                         continue;
                     case 3:
-                        PetService.GroupPetsBySpecies(pets);
+                        PetService.GroupPetsBySpecies(petList);
                         continue;
                     case 4:
-                        PetService.CombinedConsultation(CustomerList);
+                        PetService.CombinedConsultation(customerList);
                         continue;
                     case 5:
-                        CustomerService.YoungestOrOlderCustomer(CustomerList);
+                        CustomerService.YoungestOrOlderCustomer(customerList);
                         continue;
                     case 6:
-                        PetService.PetsOfEachSpecies(pets);
+                        PetService.PetsOfEachSpecies(petList);
                         continue;
                     case 7:
-                        CustomerService.CustomerUnknownPetBreed(CustomerList);
+                        CustomerService.CustomerUnknownPetBreed(customerList);
                         continue;
                     case 8:
-                        CustomerService.CustomersInCapitalityAlphabetically(CustomerList);
+                        CustomerService.CustomersInCapitalityAlphabetically(customerList);
                         continue;
                     case 9:
                         break; // Back the main menu
