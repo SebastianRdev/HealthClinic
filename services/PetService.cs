@@ -3,8 +3,16 @@ namespace HealthClinic.services;
 using HealthClinic.models;
 using HealthClinic.utils;
 
+/// <summary>
+/// Service that manages the business logic related to pets in the HealthClinic system.
+/// Allows you to view, sort, group, and display pets and their owners.
+/// </summary>
 public class PetService
 {
+    /// <summary>
+    /// Displays the list of pets and their owners on the console.
+    /// </summary>
+    /// <param name="PetList">List of customers to display</param>
     public static void ViewPets(List<Pet> PetList)
     {
         if (PetList.Count == 0)
@@ -27,6 +35,10 @@ public class PetService
     }
 
     // QUERIES
+    /// <summary>
+    /// Allows the user to sort the list of pets by name, age, or species, in ascending or descending order.
+    /// </summary>
+    /// <param name="PetList">List of pets to be sorted</param>
     public static void MainSort(List<Pet> PetList)
     {
         int order;
@@ -81,6 +93,11 @@ public class PetService
         }
     }
 
+    /// <summary>
+    /// Sort the list of pets by name and display the result.
+    /// </summary>
+    /// <param name="PetList">List of pets</param>
+    /// <param name="order">1 for ascending, 2 for descending</param>
     public static void SortByName(List<Pet> PetList, int order)
     {
         Console.WriteLine("\n--- 🐾 Pets Sorted by Name ---");
@@ -94,6 +111,11 @@ public class PetService
         Console.WriteLine("----------------------------------------------------");
     }
 
+    /// <summary>
+    /// Sort the list of pets by age and display the result.
+    /// </summary>
+    /// <param name="PetList">List of pets</param>
+    /// <param name="order">1 for ascending, 2 for descending</param>
     public static void SortByAge(List<Pet> PetList, int order)
     {
         Console.WriteLine("\n--- 🐾 Pets Sorted by Age ---");
@@ -107,6 +129,11 @@ public class PetService
         Console.WriteLine("----------------------------------------------------");
     }
 
+    /// <summary>
+    /// Sort the list of pets by species and display the result.
+    /// </summary>
+    /// <param name="PetList">List of pets</param>
+    /// <param name="order">1 for ascending, 2 for descending</param>
     public static void SortBySpecies(List<Pet> PetList, int order)
     {
         Console.WriteLine("\n--- 🐾 Pets Sorted by Species ---");
@@ -120,6 +147,10 @@ public class PetService
         Console.WriteLine("----------------------------------------------------");
     }
 
+    /// <summary>
+    /// Group pets by species and display the result.
+    /// </summary>
+    /// <param name="PetList">List of pets</param>
     public static void GroupPetsBySpecies(List<Pet> PetList)
     {
         if (PetList.Count == 0)
@@ -135,6 +166,10 @@ public class PetService
         ShowGroupPetsBySpecies(groupedPets);
     }
 
+    /// <summary>
+    /// Muestra el resultado de agrupar mascotas por especie.
+    /// </summary>
+    /// <param name="groupedPets">Colección agrupada por especie.</param>
     public static void ShowGroupPetsBySpecies(IEnumerable<IGrouping<string, Pet>> groupedPets)
     {
         Console.WriteLine("\n--- 🐾 Pets Grouped by Species ---");
@@ -153,6 +188,10 @@ public class PetService
         Console.WriteLine("----------------------------------------------------");
     }
 
+    /// <summary>
+    /// Combined query showing customers with 3-year-old dogs.
+    /// </summary>
+    /// <param name="CustomerList">List of customers</param>
     public static void CombinedConsultation(List<Customer> CustomerList)
     {
         var result = CustomerList
@@ -169,6 +208,10 @@ public class PetService
         ShowCombinedConsultation(result);
     }
 
+    /// <summary>
+    /// Shows the result of the combined query for customers with 3-year-old dogs.
+    /// </summary>
+    /// <param name="result">Collection of results</param>
     public static void ShowCombinedConsultation(IEnumerable<dynamic> result)
     {
         Console.WriteLine("\n--- 🐶 Clients with a 3-year-old dog ---");
@@ -180,6 +223,10 @@ public class PetService
         Console.WriteLine("----------------------------------------------------");
     }
 
+    /// <summary>
+    /// Shows the number of pets by species.
+    /// </summary>
+    /// <param name="PetList">List of pets</param>
     public static void PetsOfEachSpecies(List<Pet> PetList)
     {
         var speciesCount = PetList.GroupBy(p => p.Species)
@@ -188,6 +235,10 @@ public class PetService
         ShowPetsOfEachSpecies(speciesCount);
     }
 
+    /// <summary>
+    /// Shows the result of the query for the number of pets by species.
+    /// </summary>
+    /// <param name="speciesCount">Collection of species and quantities</param>
     public static void ShowPetsOfEachSpecies(IEnumerable<dynamic> speciesCount)
     {
         Console.WriteLine("\n--- 🐾 Pets of Each Species ---");

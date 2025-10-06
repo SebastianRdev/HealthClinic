@@ -1,26 +1,54 @@
-﻿using HealthClinic.models;
+﻿namespace HealthClinic;
+
+using HealthClinic.models;
 using HealthClinic.services;
 using HealthClinic.utils;
 using HealthClinic.repositories;
-using HealthClinic.data;
+
+/// <summary>
+/// Main class of the HealthClinic system. Orchestrates the application flow, initializes the main data, and manages user interaction through menus.
+/// </summary>
 public class Program
 {
+    /// <summary>
+    /// Main entry point of the system. Displays the welcome message and calls up the main menu.
+    /// </summary>
     public static void Main(string[] args)
     {
         Console.WriteLine("\n🐾 Welcome to HealthClinic System 🏥");
         Console.WriteLine("-----------------------------------");
         menu();
-
-        
     }
 
+    /// Main lists obtained from the repository for use in the application.
+
+    /// <summary>
+    /// List of veterinarians used for veterinary-related operations.
+    /// </summary>
     static List<Veterinarian> veterinarianList = new Repository<Veterinarian>().GetAll();
+
+    /// <summary>
+    /// List of customers used for customer-related operations.
+    /// </summary>
     static List<Customer> customerList = new Repository<Customer>().GetAll();
+
+    /// <summary>
+    /// List of pets used for pet-related operations.
+    /// </summary>
     static List<Pet> petList = new Repository<Pet>().GetAll();
-    // static List<Customer> customersDict = new RepositoryDict<Customer>().GetAll();
+
+    /// Dictionary obtained from the repository for use in the application.
+
+    /// <summary>
+    /// Client dictionary indexed by Guid, useful for quick searches and operations that require direct access by identifier.
+    /// </summary>
     static Dictionary<Guid, Customer> customerDict = new RepositoryDict<Customer>().GetDictionary();
 
 
+    /// <summary>
+    /// Displays the main menu and manages user navigation. Allows you to register customers, view customers, access queries, view pets, and log out of the system.
+    /// The flow remains in a loop until the user decides to exit.
+    /// </summary>
     public static void menu()
     {
 
@@ -34,7 +62,7 @@ public class Program
                 switch (choice)
                 {
                     case 1:
-                        CustomerService.MainRegisterCustomer(customerList, customerDict, petList);
+                        CustomerService.MainRegisterCustomer();
                         continue;
                     case 2:
                         CustomerService.ViewCustomers(customerList);
@@ -47,7 +75,7 @@ public class Program
                         continue;
                     case 5:
                         Console.WriteLine("\n👋 Thanks for using HealthClinic System. Goodbye! 🐶🐱");
-                        break;
+                        break; // Back the main menu
                     default:
                         Console.WriteLine("\n⚠️  Invalid choice. Please try again");
                         continue;
@@ -62,6 +90,10 @@ public class Program
         }
     }
 
+    /// <summary>
+    /// Displays the queries submenu and manages user navigation between different types of queries about customers and pets.
+    /// Allows you to filter, group, sort, and perform combined queries, as well as return to the main menu.
+    /// </summary>
     public static void QuerysMenu()
     {
         while (true)
@@ -104,9 +136,9 @@ public class Program
                         continue;
                 }
             }
-            catch(Exception e)
+            catch
             {
-                Console.WriteLine("\n❌ Invalid input. Please enter a number, error: ",e);
+                Console.WriteLine("\n❌ Invalid input. Please enter a number, error: ");
                 continue;
             }
             break;

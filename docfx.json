@@ -1,12 +1,10 @@
 {
-  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
   "metadata": [
     {
       "src": [
         {
-          "files": [
-            "../HealthClinic/HealthClinic.csproj"
-          ]
+          "src": ".",
+          "files": [ "HealthClinic.csproj" ]
         }
       ],
       "dest": "api"
@@ -15,30 +13,24 @@
   "build": {
     "content": [
       {
-        "files": [
-          "**/*.{md,yml}"
-        ],
-        "exclude": [
-          "_site/**"
-        ]
+        "files": [ "docs/**.md", "toc.yml", "index.md" ]
+      },
+      {
+        "files": [ "api/**.yml" ],
+        "dest": "api"
       }
     ],
     "resource": [
       {
-        "files": [
-          "images/**"
-        ]
+        "files": [ "images/**" ]
       }
     ],
-    "output": "_site",
-    "template": [
-      "default",
-      "modern"
-    ],
+    "overwrite": [ "docs/**.md" ],
+    "dest": "_site",
     "globalMetadata": {
-      "_appName": "HealthClinic Docs",
-      "_appTitle": "HealthClinic API Reference",
+      "_appTitle": "HealthClinic Documentation",
       "_enableSearch": true
-    }
+    },
+    "template": [ "default" ]
   }
 }

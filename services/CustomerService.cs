@@ -2,21 +2,33 @@ namespace HealthClinic.services;
 
 using HealthClinic.models;
 using HealthClinic.utils;
+using HealthClinic.repositories;
 
+/// <summary>
+/// Service that manages customer-related business logic in the HealthClinic system.
+/// Allows you to register, consult, filter, and display customers and their pets.
+/// </summary>
 public class CustomerService
 {
-    public static void MainRegisterCustomer(List<Customer> CustomerList, Dictionary<Guid, Customer> CustomerDict, List<Pet> pets)
+    /// <summary>
+    /// Orchestrate the process of registering a new customer, displaying the menu, and saving the information.
+    /// </summary>
+    public static void MainRegisterCustomer()
     {
         Console.WriteLine("\n--- 📝 Register Customer ---");
 
-        Customer newCustomer = RegisterCustomerMenu(pets);
+        Customer newCustomer = RegisterCustomerMenu();
 
-        RegisterCustomer(CustomerList, CustomerDict, newCustomer);
+        RegisterCustomer(newCustomer);
 
         newCustomer.Register();
     }
 
-    public static Customer RegisterCustomerMenu(List<Pet> globalPets)
+    /// <summary>
+    /// Display the interactive menu to register a customer and their pets, validating each piece of information entered.
+    /// </summary>
+    /// <returns>Registered customer with their pets</returns>
+    public static Customer RegisterCustomerMenu()
     {
         string name;
         int age;
@@ -113,7 +125,7 @@ public class CustomerService
 
             Pet pet = new Pet(petName, petSpecies, petBreed, petAge);
             customerPets.Add(pet);
-            globalPets.Add(pet);
+            new Repository<Pet>().Add(pet);
             pet.Register();
 
             Console.Write("\nDo you want to add another pet? (y/n): ");
@@ -129,12 +141,20 @@ public class CustomerService
         return customer;
     }
 
-    public static void RegisterCustomer(List<Customer> CustomerList, Dictionary<Guid, Customer> CustomerDict, Customer newCustomer)
+    /// <summary>
+    /// Register the customer in the main system repositories
+    /// </summary>
+    /// <param name="newCustomer">Customer to register</param>
+    public static void RegisterCustomer(Customer newCustomer)
     {
-        CustomerList.Add(newCustomer);
-        CustomerDict[newCustomer.Id] = newCustomer;
+        new Repository<Customer>().Add(newCustomer);
+        new RepositoryDict<Customer>().Add(newCustomer);
     }
 
+    /// <summary>
+    /// Display the complete list of customers and their pets in the console.
+    /// </summary>
+    /// <param name="CustomerList">List of customers to display</param>
     public static void ViewCustomers(List<Customer> CustomerList)
     {
         Console.WriteLine("\n--- 👥 Customer List ---");
@@ -169,6 +189,10 @@ public class CustomerService
         }
     }
 
+    /// <summary>
+    /// Displays information about a single customer and their pets.
+    /// </summary>
+    /// <param name="customer">Customer to display</param>
     public static void ViewSingleCustomer(Customer? customer)
     {
         if (customer == null)
@@ -200,6 +224,11 @@ public class CustomerService
     }
 
 
+    /// <summary>
+    /// Search for customers by name and display the results found.
+    /// </summary>
+    /// <param name="CustomerList">List of customers</param>
+    /// <param name="name">Name to display</param>
     public static void SearchCustomerByName(List<Customer> CustomerList, string name)
     {
         Console.Write("\n🔍 Enter customer name to search: ");
@@ -218,6 +247,10 @@ public class CustomerService
 
 
     // FILTERS
+    /// <summary>
+    /// Filter customers who have pets of a specific age and display the results
+    /// </summary>
+    /// <param name="CustomerList">List of customers</param>
     public static void FilterCustomersByPetAge(List<Customer> CustomerList)
     {
         Console.Write("\n🔍 Enter pet age to filter customers: ");
@@ -253,6 +286,11 @@ public class CustomerService
         ShowPetsByAge(filteredCustomers, petAge);
     }
 
+    /// <summary>
+    /// Shows customers who have pets of a specific age.
+    /// </summary>
+    /// <param name="customersWithPets">Filtered customers</param>
+    /// <param name="petAge">Age of the pet</param>
     public static void ShowPetsByAge(IEnumerable<dynamic> customersWithPets, int petAge)
     {
 
@@ -272,6 +310,10 @@ public class CustomerService
         Console.WriteLine("\n----------------------------------------------------");
     }
 
+    /// <summary>
+    /// Allows the user to check the youngest or oldest customer.
+    /// </summary>
+    /// <param name="CustomerList">List of customers</param>
     public static void YoungestOrOlderCustomer(List<Customer> CustomerList)
     {
         if (CustomerList.Count == 0)
@@ -318,6 +360,11 @@ public class CustomerService
         }
     }
 
+    /// <summary>
+    /// Get the youngest customer on the list.
+    /// </summary>
+    /// <param name="customerList">List of customers</param>
+    /// <returns>Youngest customer</returns>
     public static Customer? YoungerCustomer(List<Customer> customerList)
     {
         Console.WriteLine("\n--- 👤 Youngest Customer ---");
@@ -325,6 +372,11 @@ public class CustomerService
         return customerList.OrderBy(c => c.Age).First();
     }
 
+    /// <summary>
+    /// Get the oldest customer from the list.
+    /// </summary>
+    /// <param name="customerList">Lista de clientes.</param>
+    /// <returns>Oldest customer</returns>
     public static Customer? OlderCustomer(List<Customer> customerList)
     {
         Console.WriteLine("\n--- 👤 Oldest Customer ---");
@@ -332,6 +384,10 @@ public class CustomerService
         return customerList.OrderByDescending(c => c.Age).First();
     }
 
+    /// <summary>
+    /// Shows customers who have at least one pet of unknown breed.
+    /// </summary>
+    /// <param name="customerList">List of customers</param>
     public static void CustomerUnknownPetBreed(List<Customer> customerList)
     {
         var selectedCustomers = customerList.Where(c => c.Pets.Any(p => p.Breed == "unknown")).ToList();
@@ -346,6 +402,10 @@ public class CustomerService
         Console.WriteLine("----------------------------------------------------");
     }
 
+    /// <summary>
+    /// Displays customers sorted alphabetically by name in uppercase letters.
+    /// </summary>
+    /// <param name="customerList">List of customers</param>
     public static void CustomersInCapitalityAlphabetically(List<Customer> customerList)
     {
         var selectedCustomers = customerList.OrderBy(c => c.Name.ToUpper()).ToList();

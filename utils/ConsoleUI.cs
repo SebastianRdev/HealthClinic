@@ -2,8 +2,15 @@ namespace HealthClinic.utils;
 
 using HealthClinic.interfaces;
 
+/// <summary>
+/// Utility class for displaying menus in the HealthClinic system console.
+/// Implements the IConsoleUI interface.
+/// </summary>
 public class ConsoleUI : IConsoleUI
 {
+    /// <summary>
+    /// Displays the main menu of the application on the console.
+    /// </summary>
     public static void ShowMenu()
     {
         Console.WriteLine("\n📋 Main Menu:");
@@ -14,6 +21,9 @@ public class ConsoleUI : IConsoleUI
         Console.WriteLine("5️⃣  Exit 🚪");
     }
 
+    /// <summary>
+    /// Displays the query menu on the console.
+    /// </summary>
     public static void ShowQueriesMenu()
     {
         Console.WriteLine("\n🔍 Queries Menu:");
