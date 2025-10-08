@@ -36,6 +36,9 @@ public class PetService
 
     public static void UpdatedPet()
     {
+        string petName, petSpecies, petBreed;
+        int petAge;
+
         Console.WriteLine("\n--- 📝 Update Pet 🐕 ---");
             while (true)
             {
