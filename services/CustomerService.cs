@@ -156,6 +156,116 @@ public class CustomerService
     /// Display the complete list of customers and their pets in the console.
     /// </summary>
     /// <param name="CustomerList">List of customers to display</param>
+
+    public static void MainUpdateCustomer(RepositoryDict<Customer> customerDictRep, List<Customer> CustomerList)
+    {
+        Console.WriteLine("\n--- 📝 Update Customer ---");
+
+        Customer updateCustomer = UpdateCustomerMenu(customerDictRep, CustomerList);
+
+        UpdateCustomer(updateCustomer);
+    }
+
+    public static Customer UpdateCustomerMenu(RepositoryDict<Customer> customerDictRep, List<Customer> CustomerList)
+    {
+        Guid id;
+        string name;
+        int age;
+        string address;
+        string phone;
+
+        string petName, petSpecies, petBreed;
+        int petAge;
+
+        ViewCustomersById(CustomerList);
+
+        List<Pet> customerPets = new List<Pet>();
+
+        // do
+        // {
+            while (true)
+            {
+                try
+                {
+                    Console.Write("\n🎂 Enter the customer's ID: ");
+                    id = Guid.Parse(Console.ReadLine()!);
+                    var customerCurrent = customerDictRep.GetById(id);
+                    if (customerCurrent == null)
+                    {
+                        Console.WriteLine("❌ No se encontró ningún cliente con ese ID");
+                        return null;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("❌ Invalid input. Please enter a number");
+                    continue;
+                }
+                break;
+            }
+
+            while (true)
+            {
+                Console.Write("\n👤 Enter the customer's name(leave empty to keep the current): ");
+                name = Console.ReadLine()!;
+                if (!Validator.IsEmpty(name)) continue;
+                break;
+            }
+
+            while (true)
+            {
+                try
+                {
+                    Console.Write("\n🎂 Enter the customer's age(leave empty to keep the current): ");
+                    age = Convert.ToInt32(Console.ReadLine());
+                    if (!Validator.IsPositive(age)) continue;
+                    break;
+                }
+                catch
+                {
+                    Console.WriteLine("❌ Invalid input. Please enter a number");
+                    continue;
+                }
+            }
+
+            while (true)
+            {
+                Console.Write("\n🏠 Enter the customer's address(leave empty to keep the current): ");
+                address = Console.ReadLine()!;
+                if (!Validator.IsEmpty(address)) continue;
+                break;
+            }
+
+            while (true)
+            {
+                Console.Write("\n📞 Enter the customer's phone(leave empty to keep the current): ");
+                phone = Console.ReadLine()!;
+                if (!Validator.IsEmpty(phone)) continue;
+                break;
+            }
+
+
+
+            
+
+            Console.Write("\nDo you want to update a pet? (y/n): ");
+            string response = Console.ReadLine()!.Trim().ToLower();
+            if (response == "y") PetService.ViewPets();
+            // if (response != "y") break;
+        // } while (true);
+
+        Customer customer = new Customer(name, age, address, phone, customerPets);
+        foreach (var pet in customerPets)
+        {
+            pet.Owner = customer;
+        }
+        return customer;
+    }
+    public static void UpdateCustomer(Customer updateCustomer)
+    {
+        new RepositoryDict<Customer>().Update(updateCustomer);
+    }
+
     public static void ViewCustomers(List<Customer> CustomerList)
     {
         Console.WriteLine("\n--- 👥 Customer List ---");
@@ -224,6 +334,22 @@ public class CustomerService
         }
     }
 
+    public static void ViewCustomersById(List<Customer> CustomerList)
+    {
+        Console.WriteLine("\n--- 👥 Customer List ---");
+        if (CustomerList.Count == 0)
+        {
+            Console.WriteLine("⚠️  No customers found");
+            return;
+        }
+
+        foreach (var customer in CustomerList)
+        {
+            Console.WriteLine($"\n🆔 ID: {customer.Id}");
+            Console.WriteLine($"👤 Name: {customer.Name}");
+        }
+    }
+
 
     /// <summary>
     /// Search for customers by name and display the results found.
@@ -252,6 +378,7 @@ public class CustomerService
     /// Filter customers who have pets of a specific age and display the results
     /// </summary>
     /// <param name="CustomerList">List of customers</param>
+    
     public static void FilterCustomersByPetAge(List<Customer> CustomerList)
     {
         Console.Write("\n🔍 Enter pet age to filter customers: ");

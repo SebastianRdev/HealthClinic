@@ -34,6 +34,50 @@ public class PetService
         }
     }
 
+    public static void UpdatedPet()
+    {
+        Console.WriteLine("\n--- 📝 Update Pet 🐕 ---");
+            while (true)
+            {
+                Console.Write("\n📛 Enter the pet's name: ");
+                petName = Console.ReadLine()!;
+                if (!Validator.IsEmpty(petName)) continue;
+                break;
+            }
+
+            while (true)
+            {
+                Console.Write("\n🐕 Enter the pet's species: ");
+                petSpecies = Console.ReadLine()!;
+                if (!Validator.IsEmpty(petSpecies)) continue;
+                break;
+            }
+
+            while (true)
+            {
+                Console.Write("\n🐾 Enter the pet's breed(If you don't know, write: unknown): ");
+                petBreed = Console.ReadLine()!;
+                if (!Validator.IsEmpty(petBreed)) continue;
+                break;
+            }
+
+            while (true)
+            {
+                try
+                {
+                    Console.Write("\n🎂 Enter the pet's age: ");
+                    petAge = Convert.ToInt32(Console.ReadLine());
+                    if (!Validator.IsPositive(petAge)) continue;
+                    break;
+                }
+                catch
+                {
+                    Console.WriteLine("❌ Invalid input. Please enter a number");
+                    continue;
+                }
+            }
+    }
+
     // QUERIES
     /// <summary>
     /// Allows the user to sort the list of pets by name, age, or species, in ascending or descending order.

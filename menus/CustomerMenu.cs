@@ -6,7 +6,16 @@ using HealthClinic.utils;
 using HealthClinic.repositories;
 public class CustomerMenu
 {
+    /// <summary>
+    /// Client dictionary indexed by Guid, useful for quick searches and operations that require direct access by identifier.
+    /// </summary>
+    static RepositoryDict<Customer> customerDictRep = new RepositoryDict<Customer>();
+
+    /// <summary>
+    /// List of customers used for customer-related operations.
+    /// </summary>
     static List<Customer> customerList = new Repository<Customer>().GetAll();
+
     public static void CustomerCRUD()
     {
         while (true)
@@ -25,7 +34,7 @@ public class CustomerMenu
                         CustomerService.ViewCustomers(customerList);
                         continue;
                     case 3:
-                        // Actualizar customer
+                        CustomerService.MainUpdateCustomer(customerDictRep, customerList);
                         continue;
                     case 4:
                         // Eliminar customer

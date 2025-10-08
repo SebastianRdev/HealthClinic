@@ -4,6 +4,7 @@ using HealthClinic.models;
 using HealthClinic.services;
 using HealthClinic.utils;
 using HealthClinic.repositories;
+using HealthClinic.menus;
 
 /// <summary>
 /// Main class of the HealthClinic system. Orchestrates the application flow, initializes the main data, and manages user interaction through menus.
@@ -37,13 +38,6 @@ public class Program
     /// </summary>
     static List<Pet> petList = new Repository<Pet>().GetAll();
 
-    /// Dictionary obtained from the repository for use in the application.
-
-    /// <summary>
-    /// Client dictionary indexed by Guid, useful for quick searches and operations that require direct access by identifier.
-    /// </summary>
-    static Dictionary<Guid, Customer> customerDict = new RepositoryDict<Customer>().GetDictionary();
-
 
     /// <summary>
     /// Displays the main menu and manages user navigation. Allows you to register customers, view customers, access queries, view pets, and log out of the system.
@@ -62,7 +56,7 @@ public class Program
                 switch (choice)
                 {
                     case 1:
-                        CustomerService.MainRegisterCustomer();
+                        CustomerMenu.CustomerCRUD();
                         continue;
                     case 2:
                         CustomerService.ViewCustomers(customerList);
