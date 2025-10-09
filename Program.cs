@@ -59,7 +59,7 @@ public class Program
                         CustomerMenu.CustomerCRUD();
                         continue;
                     case 2:
-                        CustomerService.ViewCustomers(customerList);
+                        PetMenu.PetCRUD();
                         continue;
                     case 3:
                         QuerysMenu();

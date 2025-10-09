@@ -11,11 +11,6 @@ public class CustomerMenu
     /// </summary>
     static RepositoryDict<Customer> customerDictRep = new RepositoryDict<Customer>();
 
-    /// <summary>
-    /// List of customers used for customer-related operations.
-    /// </summary>
-    static List<Customer> customerList = new Repository<Customer>().GetAll();
-
     public static void CustomerCRUD()
     {
         while (true)
@@ -31,13 +26,13 @@ public class CustomerMenu
                         CustomerService.MainRegisterCustomer();
                         continue;
                     case 2:
-                        CustomerService.ViewCustomers(customerList);
+                        CustomerService.ViewCustomers(customerDictRep.GetAll());
                         continue;
                     case 3:
-                        CustomerService.MainUpdateCustomer(customerDictRep);
+                        CustomerService.UpdateCustomerMenu(customerDictRep);
                         continue;
                     case 4:
-                        // Eliminar customer
+                        CustomerService.RemoveCustomer(customerDictRep);
                         continue;
                     case 5:
                         Console.WriteLine("\n👋 Thanks for using HealthClinic System. Goodbye! 🐶🐱");

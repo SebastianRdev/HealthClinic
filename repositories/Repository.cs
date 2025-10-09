@@ -60,4 +60,23 @@ public class Repository<Entity> : IRepository<Entity> where Entity : class, IEnt
         if (entity != null)
             _dataList.Remove(entity);
     }
+
+    /// <summary>
+    /// Update an existing entity in the list.
+    /// </summary>
+    /// <param name="entity">The updated entity</param>
+    public void Update(Entity entity)
+    {
+        var index = _dataList.FindIndex(e => e.Id == entity.Id);
+
+        if (index >= 0)
+        {
+            _dataList[index] = entity;
+        }
+        else
+        {
+            Console.WriteLine("❌ Entity not found for update.");
+        }
+    }
+
 }

@@ -70,34 +70,20 @@ public class CustomerService
     /// <param name="newCustomer">Customer to register</param>
     public static void RegisterCustomer(Customer newCustomer)
     {
-        new Repository<Customer>().Add(newCustomer);
         new RepositoryDict<Customer>().Add(newCustomer);
-    }
-
-    /// <summary>
-    /// Display the complete list of customers and their pets in the console.
-    /// </summary>
-    /// <param name="CustomerList">List of customers to display</param>
-
-    public static void MainUpdateCustomer(RepositoryDict<Customer> customerDictRep)
-    {
-        Console.WriteLine("\n--- 📝 Update Customer ---");
-        UpdateCustomerMenu(customerDictRep);
     }
 
     public static void UpdateCustomerMenu(RepositoryDict<Customer> customerDictRep)
     {
         Console.WriteLine("\n--- 📝 Update Customer ---");
+
+        // Fetch all customers from the repository dictionary
         var customers = customerDictRep.GetAll().ToList();
 
         ViewCustomersById(customers);
 
         Console.Write("\n🎂 Enter the customer's ID: ");
-        if (!Guid.TryParse(Console.ReadLine(), out Guid id))
-        {
-            Console.WriteLine("❌ Invalid GUID format.");
-            return;
-        }
+        Guid id = Guid.Parse(Console.ReadLine()!);
 
         var customer = customerDictRep.GetById(id);
         if (customer == null)
@@ -106,7 +92,7 @@ public class CustomerService
             return;
         }
 
-        // Update customer
+        // Update customer details
         string name = Validator.ValidateContentEmpty("\n👤 New name (leave empty to keep current): ", allowEmpty: true);
         if (!string.IsNullOrWhiteSpace(name)) customer.Name = name;
 
@@ -134,19 +120,55 @@ public class CustomerService
                 return;
             }
 
-            PetService.UpdatedPet(pet);
+            PetService.EditPet(pet);
             new RepositoryDict<Pet>().Update(pet);
             Console.WriteLine("\n✅ Pet updated successfully!");
         }
 
-        customerDictRep.Update(customer);
+        UpdateCustomer(customer, customerDictRep);
         Console.WriteLine("\n✅ Customer updated successfully!");
     }
 
-    public static void UpdateCustomer(Customer updateCustomer)
+
+    public static void UpdateCustomer(Customer updateCustomer, RepositoryDict<Customer> customerDictRep)
     {
-        new RepositoryDict<Customer>().Update(updateCustomer);
+        customerDictRep.Update(updateCustomer);
     }
+
+
+    public static void RemoveCustomer(RepositoryDict<Customer> customerDictRep)
+    {
+        // Solicitar al usuario que ingrese el ID del cliente
+        Console.Write("\nEnter the customer ID to remove: ");
+        string inputId = Console.ReadLine()!.Trim();
+
+        // Verificar si el ID ingresado existe entre los clientes
+        var customer = customerDictRep.GetAll().FirstOrDefault(c => c.Id.ToString() == inputId);
+
+        if (customer == null)
+        {
+            Console.WriteLine($"❌ No customer found with that ID: {inputId}");
+            return;
+        }
+
+        // Mostrar el nombre del cliente a eliminar
+        Console.WriteLine($"🗑️ Removing customer: {customer.Name} (ID: {customer.Id})");
+
+        // Desvincular las mascotas del dueño eliminado
+        foreach (var pet in customer.Pets)
+        {
+            Console.WriteLine($"🐾 Disassociating pet: {pet.Name} (ID: {pet.Id}) from {customer.Name}");
+            pet.Owner = null; // Desvincular la mascota del dueño
+        }
+
+        // Eliminar el cliente del repositorio
+        customerDictRep.Remove(customer.Id);
+
+        // Confirmación de eliminación
+        Console.WriteLine($"✅ Customer {customer.Name} and their pets have been successfully removed.");
+    }
+
+
 
     public static void ShowAvailableCustomers(List<Customer> CustomerList)
     {

@@ -94,25 +94,123 @@ public class PetService
         }
     }
 
-    public static Pet UpdatedPet(Pet pet)
+    public static Pet EditPet(Pet pet)
     {
         Console.WriteLine("\n--- 📝 Update Pet 🐕 ---");
 
-        string petName = Validator.ValidateContent("\n📛 New name (leave empty to keep current): ");
+        string petName = Validator.ValidateContentEmpty("\n📛 New name (leave empty to keep current): ", allowEmpty: true);
         if (!string.IsNullOrWhiteSpace(petName)) pet.Name = petName;
 
-        string petSpecies = Validator.ValidateContent("\n🐕 New species (leave empty to keep current): ");
+        string petSpecies = Validator.ValidateContentEmpty("\n🐕 New species (leave empty to keep current): ", allowEmpty: true);
         if (!string.IsNullOrWhiteSpace(petSpecies)) pet.Species = petSpecies;
 
-        string petBreed = Validator.ValidateContent("\n🐾 New breed (leave empty to keep current): ");
+        string petBreed = Validator.ValidateContentEmpty("\n🐾 New breed (leave empty to keep current): ", allowEmpty: true);
         if (!string.IsNullOrWhiteSpace(petBreed)) pet.Breed = petBreed;
 
-        string petAgeInput = Validator.ValidateContent("\n🎂 New age (leave empty to keep current): ");
+        string petAgeInput = Validator.ValidateContentEmpty("\n🎂 New age (leave empty to keep current): ", allowEmpty: true);
         if (int.TryParse(petAgeInput, out int petAge)) pet.Age = petAge;
 
         Console.WriteLine($"✅ Pet '{pet.Name}' updated successfully.");
         return pet;
     }
+
+    public static void UpdatedPet(List<Pet> petList)
+    {
+        Console.WriteLine("\n--- 📝 Update Pet ---");
+
+        // Mostrar todas las mascotas disponibles
+        PetService.ViewPets(petList);
+
+        // Solicitar la ID de la mascota a actualizar
+        Console.Write("\nEnter the Pet ID you want to update: ");
+        string petIdInput = Console.ReadLine()!.Trim();
+
+        var pet = petList.FirstOrDefault(p => p.Id.ToString() == petIdInput);
+        if (pet == null)
+        {
+            Console.WriteLine("❌ No pet found with that ID.");
+            return;
+        }
+
+        // Llamar al método UpdatePet para actualizar la mascota seleccionada
+        Pet updatedPet = PetService.EditPet(pet);
+
+        // Guardar los cambios en el repositorio
+        var petRepo = new Repository<Pet>();
+        petRepo.Update(updatedPet);
+
+        Console.WriteLine("✅ Pet updated successfully!");
+    }
+
+    public static void RemovePet(List<Pet> petList)
+    {
+        Console.WriteLine("\n--- 📝 Remove Pet ---");
+
+        // Mostrar todas las mascotas disponibles
+        ViewPets(petList);
+
+        // Solicitar la ID de la mascota a eliminar
+        Console.Write("\nEnter the Pet ID you want to remove: ");
+        string petIdInput = Console.ReadLine()!.Trim();
+
+        var pet = petList.FirstOrDefault(p => p.Id.ToString() == petIdInput);
+        if (pet == null)
+        {
+            Console.WriteLine("❌ No pet found with that ID.");
+            return;
+        }
+
+        // Mostrar detalles de la mascota a eliminar
+        Console.WriteLine($"🗑️ Removing pet: {pet.Name} (ID: {pet.Id})");
+
+        // Desvincular al dueño de la mascota
+        if (pet.Owner != null)
+        {
+            Console.WriteLine($"🐾 Disassociating pet: {pet.Name} from owner: {pet.Owner.Name}");
+            pet.Owner.Pets.Remove(pet);  // Eliminar la mascota de la lista de mascotas del dueño
+            pet.Owner = null;  // Desvincular al dueño de la mascota
+        }
+
+        // Eliminar la mascota de la lista
+        petList.Remove(pet);
+
+        // Confirmación de eliminación
+        Console.WriteLine($"✅ Pet {pet.Name} has been successfully removed.");
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     // QUERIES
