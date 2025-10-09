@@ -34,7 +34,7 @@ public class CustomerMenu
                         CustomerService.ViewCustomers(customerList);
                         continue;
                     case 3:
-                        CustomerService.MainUpdateCustomer(customerDictRep, customerList);
+                        CustomerService.MainUpdateCustomer(customerDictRep);
                         continue;
                     case 4:
                         // Eliminar customer

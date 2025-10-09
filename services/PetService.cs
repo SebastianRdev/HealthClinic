@@ -2,6 +2,7 @@ namespace HealthClinic.services;
 
 using HealthClinic.models;
 using HealthClinic.utils;
+using HealthClinic.repositories;
 
 /// <summary>
 /// Service that manages the business logic related to pets in the HealthClinic system.
@@ -9,6 +10,66 @@ using HealthClinic.utils;
 /// </summary>
 public class PetService
 {
+    /// <summary>
+    /// Register a new pet interactively
+    /// </summary>
+    /// <returns>Pet registered</returns>
+    public static Pet RegisterPet()
+    {
+        Console.WriteLine("\n--- 📝 Register Pet 🐕 ---");
+
+        var customerRepo = new Repository<Customer>();
+        var customers = customerRepo.GetAll();
+
+        if (customers.Count == 0)
+        {
+            Console.WriteLine("⚠️  No customers available. Please register a customer first.");
+            return null;
+        }
+
+        CustomerService.ShowAvailableCustomers(customers);
+
+        Customer? owner = null;
+        while (owner == null)
+        {
+            Console.Write("\nEnter the customer's ID for this pet: ");
+            if (Guid.TryParse(Console.ReadLine(), out Guid ownerId))
+            {
+                owner = customers.FirstOrDefault(c => c.Id == ownerId);
+                if (owner == null)
+                {
+                    Console.WriteLine("❌ No customer found with that ID. Try again.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("❌ Invalid format. Please enter a valid GUID.");
+            }
+        }
+
+
+        string petName = Validator.ValidateContent("\n📛 Enter the pet's name: ");
+        string petSpecies = Validator.ValidateContent("\n🐕 Enter the pet's species: ");
+        string petBreed = Validator.ValidateContent("\n🐾 Enter the pet's breed (If you don't know, write: unknown): ");
+        int petAge = Validator.ValidatePositiveInt("\n🎂 Enter the pet's age: ");
+
+        Pet pet = new Pet(petName, petSpecies, petBreed, petAge)
+        {
+            Owner = owner
+        };
+
+        var petRepo = new Repository<Pet>();
+        petRepo.Add(pet);
+        pet.Register();
+
+        owner.Pets.Add(pet);
+
+        Console.WriteLine($"\n✅ Pet '{pet.Name}' successfully registered and assigned to {owner.Name}.");
+
+        return pet;
+    }
+
+
     /// <summary>
     /// Displays the list of pets and their owners on the console.
     /// </summary>
@@ -30,56 +91,29 @@ public class PetService
             Console.WriteLine($"🐈 Breed: {pet.Breed}");
             Console.WriteLine($"🎂 Age: {pet.Age} años");
             Console.WriteLine($"👤 Owner: {pet.Owner.Name} (🆔 {pet.Owner.Id})");
-
         }
     }
 
-    public static void UpdatedPet()
+    public static Pet UpdatedPet(Pet pet)
     {
-        string petName, petSpecies, petBreed;
-        int petAge;
-
         Console.WriteLine("\n--- 📝 Update Pet 🐕 ---");
-            while (true)
-            {
-                Console.Write("\n📛 Enter the pet's name: ");
-                petName = Console.ReadLine()!;
-                if (!Validator.IsEmpty(petName)) continue;
-                break;
-            }
 
-            while (true)
-            {
-                Console.Write("\n🐕 Enter the pet's species: ");
-                petSpecies = Console.ReadLine()!;
-                if (!Validator.IsEmpty(petSpecies)) continue;
-                break;
-            }
+        string petName = Validator.ValidateContent("\n📛 New name (leave empty to keep current): ");
+        if (!string.IsNullOrWhiteSpace(petName)) pet.Name = petName;
 
-            while (true)
-            {
-                Console.Write("\n🐾 Enter the pet's breed(If you don't know, write: unknown): ");
-                petBreed = Console.ReadLine()!;
-                if (!Validator.IsEmpty(petBreed)) continue;
-                break;
-            }
+        string petSpecies = Validator.ValidateContent("\n🐕 New species (leave empty to keep current): ");
+        if (!string.IsNullOrWhiteSpace(petSpecies)) pet.Species = petSpecies;
 
-            while (true)
-            {
-                try
-                {
-                    Console.Write("\n🎂 Enter the pet's age: ");
-                    petAge = Convert.ToInt32(Console.ReadLine());
-                    if (!Validator.IsPositive(petAge)) continue;
-                    break;
-                }
-                catch
-                {
-                    Console.WriteLine("❌ Invalid input. Please enter a number");
-                    continue;
-                }
-            }
+        string petBreed = Validator.ValidateContent("\n🐾 New breed (leave empty to keep current): ");
+        if (!string.IsNullOrWhiteSpace(petBreed)) pet.Breed = petBreed;
+
+        string petAgeInput = Validator.ValidateContent("\n🎂 New age (leave empty to keep current): ");
+        if (int.TryParse(petAgeInput, out int petAge)) pet.Age = petAge;
+
+        Console.WriteLine($"✅ Pet '{pet.Name}' updated successfully.");
+        return pet;
     }
+
 
     // QUERIES
     /// <summary>

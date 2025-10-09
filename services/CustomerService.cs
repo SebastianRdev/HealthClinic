@@ -31,98 +31,20 @@ public class CustomerService
     /// <returns>Registered customer with their pets</returns>
     public static Customer RegisterCustomerMenu()
     {
-        string name;
-        int age;
-        string address;
-        string phone;
 
-        while (true)
-        {
-            Console.Write("\n👤 Enter the customer's name: ");
-            name = Console.ReadLine()!;
-            if (!Validator.IsEmpty(name)) continue;
-            break;
-        }
-
-        while (true)
-        {
-            try
-            {
-                Console.Write("\n🎂 Enter the customer's age: ");
-                age = Convert.ToInt32(Console.ReadLine());
-                if (!Validator.IsPositive(age)) continue;
-                break;
-            }
-            catch
-            {
-                Console.WriteLine("❌ Invalid input. Please enter a number");
-                continue;
-            }
-        }
-
-        while (true)
-        {
-            Console.Write("\n🏠 Enter the customer's address: ");
-            address = Console.ReadLine()!;
-            if (!Validator.IsEmpty(address)) continue;
-            break;
-        }
-
-        while (true)
-        {
-            Console.Write("\n📞 Enter the customer's phone: ");
-            phone = Console.ReadLine()!;
-            if (!Validator.IsEmpty(phone)) continue;
-            break;
-        }
+        string name = Validator.ValidateContent("\n👤 Enter the customer's name: ");
+        int age = Validator.ValidatePositiveInt("\n🎂 Enter the customer's age: ");
+        string address = Validator.ValidateContent("\n🏠 Enter the customer's address: ");
+        string phone = Validator.ValidateContent("\n📞 Enter the customer's phone: ");
 
         List<Pet> customerPets = new List<Pet>();
 
         do
         {
-            string petName, petSpecies, petBreed;
-            int petAge;
-
-            Console.WriteLine("\n--- 📝 Register Pet 🐕 ---");
-            while (true)
-            {
-                Console.Write("\n📛 Enter the pet's name: ");
-                petName = Console.ReadLine()!;
-                if (!Validator.IsEmpty(petName)) continue;
-                break;
-            }
-
-            while (true)
-            {
-                Console.Write("\n🐕 Enter the pet's species: ");
-                petSpecies = Console.ReadLine()!;
-                if (!Validator.IsEmpty(petSpecies)) continue;
-                break;
-            }
-
-            while (true)
-            {
-                Console.Write("\n🐾 Enter the pet's breed(If you don't know, write: unknown): ");
-                petBreed = Console.ReadLine()!;
-                if (!Validator.IsEmpty(petBreed)) continue;
-                break;
-            }
-
-            while (true)
-            {
-                try
-                {
-                    Console.Write("\n🎂 Enter the pet's age: ");
-                    petAge = Convert.ToInt32(Console.ReadLine());
-                    if (!Validator.IsPositive(petAge)) continue;
-                    break;
-                }
-                catch
-                {
-                    Console.WriteLine("❌ Invalid input. Please enter a number");
-                    continue;
-                }
-            }
+            string petName = Validator.ValidateContent("\n📛 Enter the pet's name: ");
+            string petSpecies = Validator.ValidateContent("\n🐕 Enter the pet's species: ");
+            string petBreed = Validator.ValidateContent("\n🐾 Enter the pet's breed(If you don't know, write: unknown): ");
+            int petAge = Validator.ValidatePositiveInt("\n🎂 Enter the pet's age: ");
 
             Pet pet = new Pet(petName, petSpecies, petBreed, petAge);
             customerPets.Add(pet);
@@ -157,113 +79,82 @@ public class CustomerService
     /// </summary>
     /// <param name="CustomerList">List of customers to display</param>
 
-    public static void MainUpdateCustomer(RepositoryDict<Customer> customerDictRep, List<Customer> CustomerList)
+    public static void MainUpdateCustomer(RepositoryDict<Customer> customerDictRep)
     {
         Console.WriteLine("\n--- 📝 Update Customer ---");
-
-        Customer updateCustomer = UpdateCustomerMenu(customerDictRep, CustomerList);
-
-        UpdateCustomer(updateCustomer);
+        UpdateCustomerMenu(customerDictRep);
     }
 
-    public static Customer UpdateCustomerMenu(RepositoryDict<Customer> customerDictRep, List<Customer> CustomerList)
+    public static void UpdateCustomerMenu(RepositoryDict<Customer> customerDictRep)
     {
-        Guid id;
-        string name;
-        int age;
-        string address;
-        string phone;
+        Console.WriteLine("\n--- 📝 Update Customer ---");
+        var customers = customerDictRep.GetAll().ToList();
 
-        string petName, petSpecies, petBreed;
-        int petAge;
+        ViewCustomersById(customers);
 
-        ViewCustomersById(CustomerList);
-
-        List<Pet> customerPets = new List<Pet>();
-
-        // do
-        // {
-            while (true)
-            {
-                try
-                {
-                    Console.Write("\n🎂 Enter the customer's ID: ");
-                    id = Guid.Parse(Console.ReadLine()!);
-                    var customerCurrent = customerDictRep.GetById(id);
-                    if (customerCurrent == null)
-                    {
-                        Console.WriteLine("❌ No se encontró ningún cliente con ese ID");
-                        return null;
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("❌ Invalid input. Please enter a number");
-                    continue;
-                }
-                break;
-            }
-
-            while (true)
-            {
-                Console.Write("\n👤 Enter the customer's name(leave empty to keep the current): ");
-                name = Console.ReadLine()!;
-                if (!Validator.IsEmpty(name)) continue;
-                break;
-            }
-
-            while (true)
-            {
-                try
-                {
-                    Console.Write("\n🎂 Enter the customer's age(leave empty to keep the current): ");
-                    age = Convert.ToInt32(Console.ReadLine());
-                    if (!Validator.IsPositive(age)) continue;
-                    break;
-                }
-                catch
-                {
-                    Console.WriteLine("❌ Invalid input. Please enter a number");
-                    continue;
-                }
-            }
-
-            while (true)
-            {
-                Console.Write("\n🏠 Enter the customer's address(leave empty to keep the current): ");
-                address = Console.ReadLine()!;
-                if (!Validator.IsEmpty(address)) continue;
-                break;
-            }
-
-            while (true)
-            {
-                Console.Write("\n📞 Enter the customer's phone(leave empty to keep the current): ");
-                phone = Console.ReadLine()!;
-                if (!Validator.IsEmpty(phone)) continue;
-                break;
-            }
-
-
-
-            
-
-            Console.Write("\nDo you want to update a pet? (y/n): ");
-            string response = Console.ReadLine()!.Trim().ToLower();
-            if (response == "y") PetService.ViewPets();
-            // if (response != "y") break;
-        // } while (true);
-
-        Customer customer = new Customer(name, age, address, phone, customerPets);
-        foreach (var pet in customerPets)
+        Console.Write("\n🎂 Enter the customer's ID: ");
+        if (!Guid.TryParse(Console.ReadLine(), out Guid id))
         {
-            pet.Owner = customer;
+            Console.WriteLine("❌ Invalid GUID format.");
+            return;
         }
-        return customer;
+
+        var customer = customerDictRep.GetById(id);
+        if (customer == null)
+        {
+            Console.WriteLine("❌ No customer found with that ID.");
+            return;
+        }
+
+        // Update customer
+        string name = Validator.ValidateContentEmpty("\n👤 New name (leave empty to keep current): ", allowEmpty: true);
+        if (!string.IsNullOrWhiteSpace(name)) customer.Name = name;
+
+        string ageInput = Validator.ValidateContentEmpty("\n🎂 New age (leave empty to keep current): ", allowEmpty: true);
+        if (int.TryParse(ageInput, out int age)) customer.Age = age;
+
+        string address = Validator.ValidateContentEmpty("\n🏠 New address (leave empty to keep current): ", allowEmpty: true);
+        if (!string.IsNullOrWhiteSpace(address)) customer.Address = address;
+
+        string phone = Validator.ValidateContentEmpty("\n📞 New phone (leave empty to keep current): ", allowEmpty: true);
+        if (!string.IsNullOrWhiteSpace(phone)) customer.Phone = phone;
+
+        // Update pets
+        Console.Write("\nDo you want to update a pet? (y/n): ");
+        if (Console.ReadLine()!.Trim().ToLower() == "y")
+        {
+            PetService.ViewPets(customer.Pets);
+            Console.Write("\nEnter the Pet ID you want to update: ");
+            string input = Console.ReadLine()!.Trim();
+
+            var pet = customer.Pets.FirstOrDefault(p => p.Id.ToString() == input);
+            if (pet == null)
+            {
+                Console.WriteLine("❌ No pet found with that ID.");
+                return;
+            }
+
+            PetService.UpdatedPet(pet);
+            new RepositoryDict<Pet>().Update(pet);
+            Console.WriteLine("\n✅ Pet updated successfully!");
+        }
+
+        customerDictRep.Update(customer);
+        Console.WriteLine("\n✅ Customer updated successfully!");
     }
+
     public static void UpdateCustomer(Customer updateCustomer)
     {
         new RepositoryDict<Customer>().Update(updateCustomer);
+    }
+
+    public static void ShowAvailableCustomers(List<Customer> CustomerList)
+    {
+        Console.WriteLine("\n--- 👥 Available Customers ---");
+        foreach (var c in CustomerList)
+        {
+            Console.WriteLine($"🆔 {c.Id} | 👤 {c.Name}");
+        }
     }
 
     public static void ViewCustomers(List<Customer> CustomerList)
@@ -374,11 +265,23 @@ public class CustomerService
 
 
     // FILTERS
+
+    /// <summary>
+    /// Searches for pets by the customer's ID.
+    /// </summary>
+    /// <param name="customerId">ID of the customer whose pets are to be searched</param>
+    /// <returns>List of pets belonging to the specified customer</returns>
+    public static List<Pet> SearchPetsByIdCustomer(Guid customerId)
+    {
+        var pets = new RepositoryDict<Pet>().GetAll();
+        return pets.Where(p => p.Owner != null && p.Owner.Id == customerId).ToList();
+    }
+
     /// <summary>
     /// Filter customers who have pets of a specific age and display the results
     /// </summary>
     /// <param name="CustomerList">List of customers</param>
-    
+
     public static void FilterCustomersByPetAge(List<Customer> CustomerList)
     {
         Console.Write("\n🔍 Enter pet age to filter customers: ");
