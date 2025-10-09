@@ -14,18 +14,14 @@ public class PetService
     /// Register a new pet interactively
     /// </summary>
     /// <returns>Pet registered</returns>
-    public static Pet RegisterPet()
+    public static Pet? RegisterPet()
     {
         Console.WriteLine("\n--- 📝 Register Pet 🐕 ---");
 
         var customerRepo = new Repository<Customer>();
         var customers = customerRepo.GetAll();
 
-        if (customers.Count == 0)
-        {
-            Console.WriteLine("⚠️  No customers available. Please register a customer first.");
-            return null;
-        }
+        if (!Validator.IsExist(customers, "⚠️  No customers available. Please register a customer first.")) return null;
 
         CustomerService.ShowAvailableCustomers(customers);
 
@@ -33,18 +29,11 @@ public class PetService
         while (owner == null)
         {
             Console.Write("\nEnter the customer's ID for this pet: ");
-            if (Guid.TryParse(Console.ReadLine(), out Guid ownerId))
-            {
-                owner = customers.FirstOrDefault(c => c.Id == ownerId);
-                if (owner == null)
-                {
-                    Console.WriteLine("❌ No customer found with that ID. Try again.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("❌ Invalid format. Please enter a valid GUID.");
-            }
+            string input = Console.ReadLine()!;
+
+            owner = customers.FirstOrDefault(c => c.Id.ToString().Equals(input, StringComparison.OrdinalIgnoreCase));
+
+            if (!Validator.IsExist(owner, "❌ No customer found with that ID. Try again")) continue;
         }
 
 
@@ -76,11 +65,7 @@ public class PetService
     /// <param name="PetList">List of customers to display</param>
     public static void ViewPets(List<Pet> PetList)
     {
-        if (PetList.Count == 0)
-        {
-            Console.WriteLine("\n⚠️  No pets found.");
-            return;
-        }
+        if (!Validator.IsExist(PetList, "⚠️  No pets found")) return;
 
         Console.WriteLine("\n--- 🐾 Pets List ---");
         foreach (var pet in PetList)
@@ -90,7 +75,7 @@ public class PetService
             Console.WriteLine($"📚 Species: {pet.Species}");
             Console.WriteLine($"🐈 Breed: {pet.Breed}");
             Console.WriteLine($"🎂 Age: {pet.Age} años");
-            Console.WriteLine($"👤 Owner: {pet.Owner.Name} (🆔 {pet.Owner.Id})");
+            Console.WriteLine($"👤 Owner: {pet.Owner?.Name} (🆔 {pet.Owner?.Id})");
         }
     }
 
@@ -118,24 +103,18 @@ public class PetService
     {
         Console.WriteLine("\n--- 📝 Update Pet ---");
 
-        // Mostrar todas las mascotas disponibles
-        PetService.ViewPets(petList);
+        ViewPets(petList);
 
         // Solicitar la ID de la mascota a actualizar
         Console.Write("\nEnter the Pet ID you want to update: ");
         string petIdInput = Console.ReadLine()!.Trim();
 
         var pet = petList.FirstOrDefault(p => p.Id.ToString() == petIdInput);
-        if (pet == null)
-        {
-            Console.WriteLine("❌ No pet found with that ID.");
-            return;
-        }
+        if (!Validator.IsExist(pet, "❌ No pet found with that ID")) return;
+        if (pet == null) return;
 
-        // Llamar al método UpdatePet para actualizar la mascota seleccionada
-        Pet updatedPet = PetService.EditPet(pet);
+        Pet updatedPet = EditPet(pet);
 
-        // Guardar los cambios en el repositorio
         var petRepo = new Repository<Pet>();
         petRepo.Update(updatedPet);
 
@@ -146,7 +125,6 @@ public class PetService
     {
         Console.WriteLine("\n--- 📝 Remove Pet ---");
 
-        // Mostrar todas las mascotas disponibles
         ViewPets(petList);
 
         // Solicitar la ID de la mascota a eliminar
@@ -154,13 +132,9 @@ public class PetService
         string petIdInput = Console.ReadLine()!.Trim();
 
         var pet = petList.FirstOrDefault(p => p.Id.ToString() == petIdInput);
-        if (pet == null)
-        {
-            Console.WriteLine("❌ No pet found with that ID.");
-            return;
-        }
+        if (!Validator.IsExist(pet, "❌ No pet found with that ID")) return;
+        if (pet == null) return;
 
-        // Mostrar detalles de la mascota a eliminar
         Console.WriteLine($"🗑️ Removing pet: {pet.Name} (ID: {pet.Id})");
 
         // Desvincular al dueño de la mascota
@@ -171,11 +145,9 @@ public class PetService
             pet.Owner = null;  // Desvincular al dueño de la mascota
         }
 
-        // Eliminar la mascota de la lista
         petList.Remove(pet);
 
-        // Confirmación de eliminación
-        Console.WriteLine($"✅ Pet {pet.Name} has been successfully removed.");
+        Console.WriteLine($"✅ Pet '{pet.Name}' has been successfully removed.");
     }
 
 
@@ -332,14 +304,10 @@ public class PetService
     /// <param name="PetList">List of pets</param>
     public static void GroupPetsBySpecies(List<Pet> PetList)
     {
-        if (PetList.Count == 0)
-        {
-            Console.WriteLine("\n⚠️  No pets found");
-            return;
-        }
+        if (!Validator.IsExist(PetList, "⚠️  No pets found")) return;
 
         var groupedPets = PetList
-            .GroupBy(p => p.Species)
+            .GroupBy(p => p.Species ?? "Unknown")
             .OrderBy(g => g.Key);
 
         ShowGroupPetsBySpecies(groupedPets);
@@ -374,15 +342,11 @@ public class PetService
     public static void CombinedConsultation(List<Customer> CustomerList)
     {
         var result = CustomerList
-            .Where(c => c.Pets.Any(p => p.Species.Equals("dog", StringComparison.OrdinalIgnoreCase) && p.Age == 3))
+            .Where(c => c.Pets.Any(p => p.Species != null && p.Species.Equals("dog", StringComparison.OrdinalIgnoreCase) && p.Age == 3))
             .Select(c => new { c.Name, c.Phone })
             .ToList();
 
-        if (result.Count == 0)
-        {
-            Console.WriteLine("\n⚠️  No customers found with a 3-year-old dog");
-            return;
-        }
+        if (!Validator.IsExist(result, "⚠️  No customers found with a 3-year-old dog")) return;
 
         ShowCombinedConsultation(result);
     }

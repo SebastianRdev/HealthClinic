@@ -35,8 +35,8 @@ public class CustomerMenu
                         CustomerService.RemoveCustomer(customerDictRep);
                         continue;
                     case 5:
-                        Console.WriteLine("\n👋 Thanks for using HealthClinic System. Goodbye! 🐶🐱");
-                        break; // Back the main menu
+                        Console.WriteLine("\nBack the main menu 🐶🐱");
+                        break;
                     default:
                         Console.WriteLine("\n⚠️  Invalid choice. Please try again");
                         continue;

@@ -1,5 +1,7 @@
 namespace HealthClinic.utils;
 
+using HealthClinic.models;
+
 /// <summary>
 /// Utility class for common validations in the HealthClinic system.
 /// </summary>
@@ -53,11 +55,11 @@ public static class Validator
         {
             Console.Write(prompt);
             input = Console.ReadLine()!;
-            
+
             if (allowEmpty || !string.IsNullOrWhiteSpace(input))
                 return input;
 
-            Console.WriteLine("⚠️  Empty spaces are not allowed.");
+            Console.WriteLine("⚠️  Empty spaces are not allowed");
         }
     }
 
@@ -87,10 +89,31 @@ public static class Validator
     {
         if (string.IsNullOrWhiteSpace(text))
         {
-            Console.WriteLine("⚠️  Empty spaces are not allowed.");
+            Console.WriteLine("⚠️  Empty spaces are not allowed");
             return false;
         }
 
         return true;
     }
+
+    public static bool IsExist<T>(List<T>? list, string message)
+    {
+        if (list == null || list.Count == 0)
+        {
+            Console.WriteLine($"{message}");
+            return false;
+        }
+        return true;
+    }
+
+    public static bool IsExist<T>(T? obj, string message) where T : class
+    {
+        if (obj == null)
+        {
+            Console.WriteLine($"{message}");
+            return false;
+        }
+        return true;
+    }
+
 }

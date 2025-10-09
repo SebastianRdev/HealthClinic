@@ -86,11 +86,8 @@ public class CustomerService
         Guid id = Guid.Parse(Console.ReadLine()!);
 
         var customer = customerDictRep.GetById(id);
-        if (customer == null)
-        {
-            Console.WriteLine("❌ No customer found with that ID.");
-            return;
-        }
+        if (!Validator.IsExist(customer, "❌ No customer found with that ID")) return;
+        if (customer == null) return;
 
         // Update customer details
         string name = Validator.ValidateContentEmpty("\n👤 New name (leave empty to keep current): ", allowEmpty: true);
@@ -114,11 +111,9 @@ public class CustomerService
             string input = Console.ReadLine()!.Trim();
 
             var pet = customer.Pets.FirstOrDefault(p => p.Id.ToString() == input);
-            if (pet == null)
-            {
-                Console.WriteLine("❌ No pet found with that ID.");
-                return;
-            }
+
+            if (!Validator.IsExist(pet, "❌ No pet found with that ID")) return;
+            if (pet == null) return;
 
             PetService.EditPet(pet);
             new RepositoryDict<Pet>().Update(pet);
@@ -145,11 +140,8 @@ public class CustomerService
         // Verificar si el ID ingresado existe entre los clientes
         var customer = customerDictRep.GetAll().FirstOrDefault(c => c.Id.ToString() == inputId);
 
-        if (customer == null)
-        {
-            Console.WriteLine($"❌ No customer found with that ID: {inputId}");
-            return;
-        }
+        if (!Validator.IsExist(customer, "❌ No customer found with that ID")) return;
+        if (customer == null) return;
 
         // Mostrar el nombre del cliente a eliminar
         Console.WriteLine($"🗑️ Removing customer: {customer.Name} (ID: {customer.Id})");
@@ -181,12 +173,8 @@ public class CustomerService
 
     public static void ViewCustomers(List<Customer> CustomerList)
     {
+        if (!Validator.IsExist(CustomerList, "⚠️  No customers found")) return;
         Console.WriteLine("\n--- 👥 Customer List ---");
-        if (CustomerList.Count == 0)
-        {
-            Console.WriteLine("⚠️  No customers found");
-            return;
-        }
 
         foreach (var customer in CustomerList)
         {
@@ -219,11 +207,8 @@ public class CustomerService
     /// <param name="customer">Customer to display</param>
     public static void ViewSingleCustomer(Customer? customer)
     {
-        if (customer == null)
-        {
-            Console.WriteLine("⚠️  No customers found.");
-            return;
-        }
+        if (!Validator.IsExist(customer, "⚠️  No customers found")) return;
+        if (customer == null) return;
 
         Console.WriteLine($"\n🆔 ID: {customer.Id}");
         Console.WriteLine($"👤 Name: {customer.Name}");
@@ -249,12 +234,8 @@ public class CustomerService
 
     public static void ViewCustomersById(List<Customer> CustomerList)
     {
+        if (!Validator.IsExist(CustomerList, "⚠️  No customers found")) return;
         Console.WriteLine("\n--- 👥 Customer List ---");
-        if (CustomerList.Count == 0)
-        {
-            Console.WriteLine("⚠️  No customers found");
-            return;
-        }
 
         foreach (var customer in CustomerList)
         {
@@ -264,26 +245,26 @@ public class CustomerService
     }
 
 
-    /// <summary>
-    /// Search for customers by name and display the results found.
-    /// </summary>
-    /// <param name="CustomerList">List of customers</param>
-    /// <param name="name">Name to display</param>
-    // public static void SearchCustomerByName(List<Customer> CustomerList, string name)
-    // {
-    //     Console.Write("\n🔍 Enter customer name to search: ");
-    //     string searchName = Console.ReadLine()!;
-    //     var foundCustomers = CustomerList.Where(c => c.Name!.Equals(searchName, StringComparison.OrdinalIgnoreCase));
-    //     if (foundCustomers.Count == 0)
-    //     {
-    //         Console.WriteLine("⚠️  No customers found with that name.");
-    //         return;
-    //     }
-    //     Console.WriteLine($"\n📋 --- Customers Found with Name: {searchName} ---");
-    //     Console.WriteLine("----------------------------------------------------");
-    //     ViewCustomers(foundCustomers);
-    //     Console.WriteLine("----------------------------------------------------");
-    // }
+    // /// <summary>
+    // /// Search for customers by name and display the results found.
+    // /// </summary>
+    // /// <param name="CustomerList">List of customers</param>
+    // /// <param name="name">Name to display</param>
+    // // public static void SearchCustomerByName(List<Customer> CustomerList, string name)
+    // // {
+    // //     Console.Write("\n🔍 Enter customer name to search: ");
+    // //     string searchName = Console.ReadLine()!;
+    // //     var foundCustomers = CustomerList.Where(c => c.Name!.Equals(searchName, StringComparison.OrdinalIgnoreCase));
+    // //     if (foundCustomers.Count == 0)
+    // //     {
+    // //         Console.WriteLine("⚠️  No customers found with that name.");
+    // //         return;
+    // //     }
+    // //     Console.WriteLine($"\n📋 --- Customers Found with Name: {searchName} ---");
+    // //     Console.WriteLine("----------------------------------------------------");
+    // //     ViewCustomers(foundCustomers);
+    // //     Console.WriteLine("----------------------------------------------------");
+    // // }
 
 
     // FILTERS
@@ -306,6 +287,8 @@ public class CustomerService
 
     public static void FilterCustomersByPetAge(List<Customer> CustomerList)
     {
+        if (!Validator.IsExist(CustomerList, "⚠️  No customers found")) return;
+
         Console.Write("\n🔍 Enter pet age to filter customers: ");
         int petAge;
         while (true)
@@ -331,11 +314,8 @@ public class CustomerService
         })
         .Where(c => c.Pets.Any()).ToList();
 
-        if (filteredCustomers.Count == 0)
-        {
-            Console.WriteLine("⚠️  No customers found with pets of that age.");
-            return;
-        }
+        if (!Validator.IsExist(filteredCustomers, "⚠️  No customers found with pets of that age")) return;
+
         ShowPetsByAge(filteredCustomers, petAge);
     }
 
@@ -369,11 +349,7 @@ public class CustomerService
     /// <param name="CustomerList">List of customers</param>
     public static void YoungestOrOlderCustomer(List<Customer> CustomerList)
     {
-        if (CustomerList.Count == 0)
-        {
-            Console.WriteLine("\n⚠️  No customers found.");
-            return;
-        }
+        if (!Validator.IsExist(CustomerList, "⚠️  No customers found")) return;
 
         int choose;
         while (true)
@@ -444,11 +420,9 @@ public class CustomerService
     public static void CustomerUnknownPetBreed(List<Customer> customerList)
     {
         var selectedCustomers = customerList.Where(c => c.Pets.Any(p => p.Breed == "unknown")).ToList();
-        if (selectedCustomers.Count == 0)
-        {
-            Console.WriteLine("⚠️  No customers found with unknown pet breed");
-            return;
-        }
+
+        if (!Validator.IsExist(selectedCustomers, "⚠️  No customers found with unknown pet breed")) return;
+
         Console.WriteLine("\n📋 --- Customers with Unknown Pet Breed ---");
         Console.WriteLine("----------------------------------------------------");
         ViewCustomers(selectedCustomers);
@@ -458,10 +432,12 @@ public class CustomerService
     /// <summary>
     /// Displays customers sorted alphabetically by name in uppercase letters.
     /// </summary>
-    /// <param name="customerList">List of customers</param>
-    public static void CustomersInCapitalityAlphabetically(List<Customer> customerList)
+    /// <param name="CustomerList">List of customers</param>
+    public static void CustomersInCapitalityAlphabetically(List<Customer> CustomerList)
     {
-        var selectedCustomers = customerList.OrderBy(c => c.Name.ToUpper()).ToList();
+        if (!Validator.IsExist(CustomerList, "⚠️  No customers found")) return;
+
+        var selectedCustomers = CustomerList.OrderBy(c => c.Name.ToUpper()).ToList();
 
         Console.WriteLine("\n📋 --- Customers in Alphabetical Order (UPPERCASE) ---");
         Console.WriteLine("----------------------------------------------------");

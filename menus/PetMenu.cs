@@ -31,8 +31,8 @@ public class PetMenu
                         PetService.RemovePet(petList);
                         continue;
                     case 5:
-                        Console.WriteLine("\n Back the main menu! 🐶🐱");
-                        break; // Back the main menu
+                        Console.WriteLine("\n Back the main menu 🐶🐱");
+                        break;
                     default:
                         Console.WriteLine("\n⚠️  Invalid choice. Please try again");
                         continue;
