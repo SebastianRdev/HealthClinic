@@ -7,6 +7,37 @@ using HealthClinic.models;
 public class PetMenu
 {
     static List<Pet> petList = new Repository<Pet>().GetAll();
+
+    public static void PetMainMenu()
+    {
+        while (true)
+        {
+            try
+            {
+                ConsoleUI.ShowPetMainMenu();
+                Console.Write("\n👉 Enter your choice: ");
+                int choice = Convert.ToInt32(Console.ReadLine());
+                switch (choice)
+                {
+                    case 1:
+                        PetCRUD();
+                        continue;
+                    case 2:
+                        Console.WriteLine("\nBack to main menu 🐶🐱");
+                        break;
+                    default:
+                        Console.WriteLine("\n⚠️  Invalid choice. Please try again");
+                        continue;
+                }
+            }
+            catch
+            {
+                Console.WriteLine("\n❌ Invalid input. Please enter a number");
+                continue;
+            }
+            break;
+        }
+    }
     public static void PetCRUD()
     {
         while (true)
@@ -31,7 +62,7 @@ public class PetMenu
                         PetService.RemovePet(petList);
                         continue;
                     case 5:
-                        Console.WriteLine("\n Back the main menu 🐶🐱");
+                        Console.WriteLine("\n Back to Pet main menu 🐶🐱");
                         break;
                     default:
                         Console.WriteLine("\n⚠️  Invalid choice. Please try again");
