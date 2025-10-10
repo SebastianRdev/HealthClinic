@@ -1,22 +1,13 @@
 namespace HealthClinic.models;
 
 using HealthClinic.interfaces;
-using HealthClinic.utils;
 
 /// <summary>
 /// Represents a client of the HealthClinic system. Contains personal information and the list of associated pets.
 /// Implements interfaces for registration and notification.
 /// </summary>
-public class Customer : IRegistrable, IEntity, INotificable
+public class Customer : Person, IRegistrable, IEntity, INotificable
 {
-    /// <summary>
-    /// Unique customer identifier. Generated automatically when the instance is created.
-    /// </summary>
-    public Guid Id { get; private set; } = Guid.NewGuid();
-    private string _name;
-    private int _age;
-    private string _address;
-    private string _phone;
     private List<Pet> _pets = [];
 
     /// <summary>
@@ -37,64 +28,25 @@ public class Customer : IRegistrable, IEntity, INotificable
     }
 
     /// <summary>
-    /// Customer name. Cannot be empty.
+    /// Customer name.
     /// </summary>
-    public string Name
-    {
-        get => _name;
-        set
-        {
-            if (!string.IsNullOrWhiteSpace(value))
-                _name = value;
-            else
-                throw new ArgumentException("Name cannot be empty");
-        }
-    }
+    public string Name { get => _name; set => _name = value; }
+
 
     /// <summary>
-    /// Customer age. Must be a positive number.
+    /// Customer age.
     /// </summary>
-    public int Age
-    {
-        get => _age;
-        set
-        {
-            if (Validator.IsPositive(value))
-                _age = value;
-            else
-                throw new ArgumentException("Age must be a positive number");
-        }
-    }
+    public int Age { get => _age; set => _age = value; }
 
     /// <summary>
-    /// Customer address. Cannot be empty.
+    /// Customer address
     /// </summary>
-    public string Address
-    {
-        get => _address;
-        set
-        {
-            if (!string.IsNullOrWhiteSpace(value))
-                _address = value;
-            else
-                throw new ArgumentException("Name cannot be empty");
-        }
-    }
+    public string Address { get => _address; set => _address = value; }
 
     /// <summary>
-    /// Customer's phone number. Cannot be empty.
+    /// Customer's phone number.
     /// </summary>
-    public string Phone
-    {
-        get => _phone;
-        set
-        {
-            if (!string.IsNullOrWhiteSpace(value))
-                _phone = value;
-            else
-                throw new ArgumentException("Invalid phone number format");
-        }
-    }
+    public string Phone { get => _phone; set => _phone = value; }
 
     /// <summary>
     /// List of pets associated with the customer.
