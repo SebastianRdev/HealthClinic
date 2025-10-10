@@ -1,36 +1,41 @@
 namespace HealthClinic.models;
 
 using HealthClinic.interfaces;
+using HealthClinic.models.Enums;
 
 /// <summary>
 /// Represents a veterinarian registered in the system. Includes identification information, name, and specialization.
 /// </summary>
-public class Veterinarian : IEntity
+public class Veterinarian : Person, IEntity, IRegistrable
 {
-    /// <summary>
-    /// Unique identifier for the veterinarian. It is automatically generated when the instance is created.
-    /// </summary>
-    public Guid Id { get; private set; }
+    public string Email { get; set; }
+
+    public string LicenseNumber { get; set; }
+    public Specialties Specialty { get; set; }
+
+    public bool IsActive { get; set; } = true;
+
 
     /// <summary>
-    /// Name of the veterinarian.
+    /// Creates a new Veterinarian instance with the provided information.
     /// </summary>
-    public string? Name { get; set; }
-
-    /// <summary>
-    /// Veterinarian's specialization (e.g., surgery, general medicine).
-    /// </summary>
-    public string? Specialization { get; set; }
-
-    /// <summary>
-    /// Constructor that initializes a new veterinarian with the provided data.
-    /// </summary>
-    /// <param name="name">Name of the veterinarian</param>
-    /// <param name="specialization">Veterinary specialization</param>
-    public Veterinarian(string name, string specialization)
+    public Veterinarian(string name, int age, string address, string phone, string email, string licenseNumber, Specialties specialty)
     {
-        Id = Guid.NewGuid();
         Name = name;
-        Specialization = specialization;
+        Age = age;
+        Address = address;
+        Phone = phone;
+        Email = email;
+        LicenseNumber = licenseNumber;
+        Specialty = specialty;
+        IsActive = true;
+    }
+
+    /// <summary>
+    /// Registers the veterinarian in the system.
+    /// </summary>
+    public void Register()
+    {
+        Console.WriteLine($"\n✅ Veterinarian registered successfully");
     }
 }

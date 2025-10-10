@@ -83,4 +83,46 @@ public class ConsoleUI : IConsoleUI
         Console.WriteLine("8️⃣  List customers alphabetically in uppercase letters.");
         Console.WriteLine("9️⃣  Back to Main Menu 🔙");
     }
+
+    public static void ShowVeterinarianMainMenu()
+    {
+        Console.WriteLine("\n📋 Veterinarian Main Menu:");
+        Console.WriteLine("1️⃣  Veterinarian CRUD");
+        Console.WriteLine("2️⃣  Appointments");
+    }
+
+    public static void ShowVeterinarianCRUD()
+    {
+        Console.WriteLine("\n📋 Veterinarian CRUD:");
+        Console.WriteLine("1️⃣  Register Veterinarian");
+        Console.WriteLine("2️⃣  View veterinarians");
+        Console.WriteLine("3️⃣  Update a veterinarian");
+        Console.WriteLine("4️⃣  Delete a veterinarian");
+        Console.WriteLine("5️⃣  Back to Main Menu 🔙");
+    }
+
+    public static void ShowAppointmentsVeterinarianMenu()
+    {
+        Console.WriteLine("\n📋Appointments Veterinarian Menu:");
+        Console.WriteLine("1️⃣  See appointments by veterinarian");
+        Console.WriteLine("2️⃣  Change the status of an appointment");
+        Console.WriteLine("3️⃣  Back to Main Menu 🔙");
+    }
+
+    public static void ShowAppointmentsMainMenu()
+    {
+        Console.WriteLine("\n📋Appointments Main Menu:");
+        Console.WriteLine("1️⃣  Appointments CRUD");
+        Console.WriteLine("5️⃣  Back to Main Menu 🔙");
+    }
+
+    public static void ShowAppointmentsCRUD()
+    {
+        Console.WriteLine("\n📋Appointments CRUD:");
+        Console.WriteLine("1️⃣  Register appointment");
+        Console.WriteLine("2️⃣  View appointments");
+        Console.WriteLine("3️⃣  Update a appointment");
+        Console.WriteLine("4️⃣  Delete a appointment");
+        Console.WriteLine("5️⃣  Back to Main Menu 🔙");
+    }
 }

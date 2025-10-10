@@ -22,4 +22,9 @@ public class Database
     /// List of veterinarians registered in the system.
     /// </summary>
     public static List<Veterinarian> Veterinarians { get; } = [];
+
+    /// <summary>
+    /// List of Appointment registered in the system.
+    /// </summary>
+    public static List<Appointment> Appointments { get; } = [];
 }

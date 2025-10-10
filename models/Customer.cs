@@ -8,7 +8,7 @@ using HealthClinic.interfaces;
 /// </summary>
 public class Customer : Person, IRegistrable, IEntity, INotificable
 {
-    private List<Pet> _pets = [];
+    public List<Pet> Pets = [];
 
     /// <summary>
     /// Constructor that initializes a new client with the provided data and their list of pets.
@@ -20,42 +20,13 @@ public class Customer : Person, IRegistrable, IEntity, INotificable
     /// <param name="pets">List of associated pets</param>
     public Customer(string name, int age, string address, string phone, List<Pet>? pets)
     {
-        _name = name;
-        _age = age;
-        _address = address;
-        _phone = phone;
-        _pets = pets ?? new List<Pet>();
+        Name = name;
+        Age = age;
+        Address = address;
+        Phone = phone;
+        Pets = pets ?? new List<Pet>();
     }
 
-    /// <summary>
-    /// Customer name.
-    /// </summary>
-    public string Name { get => _name; set => _name = value; }
-
-
-    /// <summary>
-    /// Customer age.
-    /// </summary>
-    public int Age { get => _age; set => _age = value; }
-
-    /// <summary>
-    /// Customer address
-    /// </summary>
-    public string Address { get => _address; set => _address = value; }
-
-    /// <summary>
-    /// Customer's phone number.
-    /// </summary>
-    public string Phone { get => _phone; set => _phone = value; }
-
-    /// <summary>
-    /// List of pets associated with the customer.
-    /// </summary>
-    public List<Pet> Pets
-    {
-        get => _pets;
-        private set => _pets = value ?? new List<Pet>();
-    }
 
     /// <summary>
     /// Displays detailed customer information, including their pets.

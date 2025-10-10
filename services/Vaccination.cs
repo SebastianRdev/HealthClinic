@@ -3,7 +3,7 @@ namespace HealthClinic.services;
 /// <summary>
 /// Represents the vaccination service performed by a veterinarian. It inherits the logic of the veterinary service.
 /// </summary>
-public class Vaccination : VeterinarianService
+public class Vaccination : VeterinaryService
 {
     /// <summary>
     /// Perform the vaccination, displaying the corresponding message.

@@ -21,12 +21,12 @@ public class Repository<Entity> : IRepository<Entity> where Entity : class, IEnt
     /// </summary>
     public Repository()
     {
-        if (typeof(Entity) == typeof(Customer))
-            _dataList = (List<Entity>)(object)Database.Customers;
-        else if (typeof(Entity) == typeof(Pet))
+        if (typeof(Entity) == typeof(Pet))
             _dataList = (List<Entity>)(object)Database.Pets;
         else if (typeof(Entity) == typeof(Veterinarian))
             _dataList = (List<Entity>)(object)Database.Veterinarians;
+        else if (typeof(Entity) == typeof(Appointment))
+            _dataList = (List<Entity>)(object)Database.Appointments;
         else
             throw new InvalidOperationException($"There is no list for {typeof(Entity).Name} in Database");
     }
