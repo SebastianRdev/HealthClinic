@@ -15,14 +15,6 @@ public class Program
     /// </summary>
     public static void Main()
     {
-
-        Console.WriteLine("\n🐾 Welcome to HealthClinic System 🏥");
-        Console.WriteLine("-----------------------------------");
         MainMenu.Menu();
     }
-
-    /// <summary>
-    /// List of veterinarians used for veterinary-related operations.
-    /// </summary>
-    static List<Veterinarian> veterinarianList = new Repository<Veterinarian>().GetAll();
 }

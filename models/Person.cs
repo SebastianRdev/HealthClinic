@@ -1,6 +1,8 @@
 namespace HealthClinic.models;
 
-public abstract class Person
+using HealthClinic.interfaces;
+
+public abstract class Person : IEntity
 {
     public Guid Id { get; private set; } = Guid.NewGuid();
     public string? Name { get; set; }

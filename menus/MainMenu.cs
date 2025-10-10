@@ -9,6 +9,8 @@ public class MainMenu
     /// </summary>
     public static void Menu()
     {
+        Console.WriteLine("\n🐾 Welcome to HealthClinic System 🏥");
+        Console.WriteLine("-----------------------------------");
 
         while (true)
         {

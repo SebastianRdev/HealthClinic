@@ -93,7 +93,6 @@ public class VeterinarianService
             if (Enum.IsDefined(typeof(Specialties), specialtyInt))
                 vet.Specialty = (Specialties)specialtyInt;
         }
-
         return vet;
     }
 
@@ -137,7 +136,7 @@ public class VeterinarianService
 
         if (!vet.IsActive)
         {
-            Console.WriteLine($"⚠️ Veterinarian '{vet.Name}' is already inactive.");
+            Console.WriteLine($"⚠️ Veterinarian '{vet.Name}' is already inactive");
             return;
         }
 
@@ -145,7 +144,7 @@ public class VeterinarianService
 
         vet.IsActive = false;
 
-        Console.WriteLine($"✅ Veterinarian '{vet.Name}' has been marked as inactive.");
+        Console.WriteLine($"✅ Veterinarian '{vet.Name}' has been marked as inactive");
     }
 
     /// <summary>
@@ -156,28 +155,28 @@ public class VeterinarianService
         var appointmentRepo = new Repository<Appointment>();
         var appointments = appointmentRepo.GetAll();
 
-        if (!Validator.IsExist(appointments, "⚠️  No hay citas registradas")) return;
+        if (!Validator.IsExist(appointments, "⚠️  No appointments registered")) return;
 
-        Console.WriteLine("\n--- 📅 Lista de Citas ---");
+        Console.WriteLine("\n--- 📅 Appointments List ---");
         foreach (var app in appointments)
         {
             Console.WriteLine($"\n🆔 ID: {app.Id}");
-            Console.WriteLine($"👤 Mascota: {app.Pet.Name}");
-            Console.WriteLine($"👨‍⚕️ Veterinario: {app.Veterinarian.Name}");
-            Console.WriteLine($"📅 Fecha: {app.Date}");
-            Console.WriteLine($"🩺 Servicio: {app.ServiceType}");
-            Console.WriteLine($"✅ Atendida: {(app.IsAttended ? "Sí" : "No")}");
+            Console.WriteLine($"👤 Pet: {app.Pet?.Name ?? "Unknown"}");
+            Console.WriteLine($"👨‍⚕️ Veterinarian: {app.Veterinarian?.Name ?? "Unknown"}");
+            Console.WriteLine($"📅 Date: {app.DateTime}");
+            Console.WriteLine($"🩺 Service: {app.ServiceType}");
+            Console.WriteLine($"✅ Attended: {(app.IsAttended ? "Yes" : "No")}");
         }
 
-        Console.Write("\nIngrese el ID de la cita a atender: ");
+        Console.Write("\nEnter the ID of the appointment to attend: ");
         string appIdInput = Console.ReadLine()!.Trim();
         var appointment = appointments.FirstOrDefault(a => a.Id.ToString() == appIdInput);
 
-        if (!Validator.IsExist(appointment, "❌ No se encontró una cita con ese ID")) return;
+        if (!Validator.IsExist(appointment, "❌ No appointment found with that ID")) return;
         if (appointment == null) return;
         if (appointment.IsAttended)
         {
-            Console.WriteLine("⚠️ La cita ya fue atendida.");
+            Console.WriteLine("⚠️ The appointment has already been attended");
             return;
         }
 
@@ -193,16 +192,16 @@ public class VeterinarianService
                 break;
             // Agrega más casos si tienes otros servicios
             default:
-                Console.WriteLine("Servicio no implementado.");
+                Console.WriteLine("Service not implemented");
                 return;
         }
 
-        Console.WriteLine($"\nEl veterinario '{appointment.Veterinarian.Name}' atiende la cita:");
+    Console.WriteLine($"\nThe veterinarian '{appointment.Veterinarian?.Name ?? "Unknown"}' is attending the appointment:");
         service.Attend();
 
-        appointment.IsAttended = true;
+        appointment.Status = AppointmentStatus.Completed;
         appointmentRepo.Update(appointment);
 
-        Console.WriteLine("✅ La cita ha sido atendida correctamente.");
+        Console.WriteLine("✅ The appointment has been attended successfully.");
     }
 }

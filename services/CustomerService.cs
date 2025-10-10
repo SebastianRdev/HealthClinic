@@ -77,8 +77,6 @@ public class CustomerService
     public static void UpdateCustomerMenu(RepositoryDict<Customer> customerDictRep)
     {
         Console.WriteLine("\n--- 📝 Update Customer ---");
-
-        // Fetch all customers from the repository dictionary
         var customers = customerDictRep.GetAll().ToList();
 
         ViewCustomersById(customers);

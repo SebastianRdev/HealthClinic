@@ -18,10 +18,10 @@ public class PetService
     {
         Console.WriteLine("\n--- 📝 Register Pet 🐕 ---");
 
-        var customerRepo = new Repository<Customer>();
+        var customerRepo = new RepositoryDict<Customer>();
         var customers = customerRepo.GetAll();
 
-        if (!Validator.IsExist(customers, "⚠️  No customers available. Please register a customer first.")) return null;
+        if (!Validator.IsExist(customers, "⚠️  No customers available. Please register a customer first")) return null;
 
         CustomerService.ShowAvailableCustomers(customers);
 
@@ -105,7 +105,6 @@ public class PetService
 
         ViewPets(petList);
 
-        // Solicitar la ID de la mascota a actualizar
         Console.Write("\nEnter the Pet ID you want to update: ");
         string petIdInput = Console.ReadLine()!.Trim();
 
@@ -127,7 +126,6 @@ public class PetService
 
         ViewPets(petList);
 
-        // Solicitar la ID de la mascota a eliminar
         Console.Write("\nEnter the Pet ID you want to remove: ");
         string petIdInput = Console.ReadLine()!.Trim();
 
@@ -141,8 +139,8 @@ public class PetService
         if (pet.Owner != null)
         {
             Console.WriteLine($"🐾 Disassociating pet: {pet.Name} from owner: {pet.Owner.Name}");
-            pet.Owner.Pets.Remove(pet);  // Eliminar la mascota de la lista de mascotas del dueño
-            pet.Owner = null;  // Desvincular al dueño de la mascota
+            pet.Owner.Pets.Remove(pet);
+            pet.Owner = null;
         }
 
         petList.Remove(pet);
