@@ -26,14 +26,17 @@ public class MainMenu
                         PetMenu.PetMainMenu();
                         continue;
                     case 3:
-                        QuerysMenu.Querys();
+                        VeterinarianMenu.VeterinarianMainMenu();
                         continue;
                     case 4:
-                        // Coming soon
+                        AppointmentMenu.AppointmentMainMenu();
                         continue;
                     case 5:
+                        QuerysMenu.Querys();
+                        break;
+                    case 6:
                         Console.WriteLine("\n👋 Thanks for using HealthClinic System. Goodbye! 🐶🐱");
-                        break; // Back the main menu
+                        break; // Finish the program
                     default:
                         Console.WriteLine("\n⚠️  Invalid choice. Please try again");
                         continue;

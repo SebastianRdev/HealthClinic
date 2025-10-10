@@ -39,6 +39,7 @@ public class CustomerService
 
         List<Pet> customerPets = new List<Pet>();
 
+        Console.WriteLine("\n--- 📝🐕 Register Pet ---");
         do
         {
             string petName = Validator.ValidateContent("\n📛 Enter the pet's name: ");
@@ -437,7 +438,7 @@ public class CustomerService
     {
         if (!Validator.IsExist(CustomerList, "⚠️  No customers found")) return;
 
-        var selectedCustomers = CustomerList.OrderBy(c => c.Name.ToUpper()).ToList();
+        var selectedCustomers = CustomerList.OrderBy(c => (c.Name ?? "").ToUpper()).ToList();
 
         Console.WriteLine("\n📋 --- Customers in Alphabetical Order (UPPERCASE) ---");
         Console.WriteLine("----------------------------------------------------");

@@ -3,6 +3,7 @@
 using HealthClinic.models;
 using HealthClinic.repositories;
 using HealthClinic.menus;
+using HealthClinic.models.Enums;
 
 /// <summary>
 /// Main class of the HealthClinic system. Orchestrates the application flow, initializes the main data, and manages user interaction through menus.
@@ -14,6 +15,7 @@ public class Program
     /// </summary>
     public static void Main()
     {
+
         Console.WriteLine("\n🐾 Welcome to HealthClinic System 🏥");
         Console.WriteLine("-----------------------------------");
         MainMenu.Menu();

@@ -31,6 +31,7 @@ public class AppointmentService
         string petIdInput = Console.ReadLine()!.Trim();
         var petObj = pets.FirstOrDefault(p => p.Id.ToString() == petIdInput);
         if (!Validator.IsExist(petObj, "❌ Pet not found.")) return null;
+        if (petObj == null) return null;
 
         var vets = vetRepo.GetAll().ToList();
         if (!Validator.IsExist(vets, "⚠️ No veterinarians registered.")) return null;
@@ -43,6 +44,7 @@ public class AppointmentService
         string vetIdInput = Console.ReadLine()!.Trim();
         var vetObj = vets.FirstOrDefault(v => v.Id.ToString() == vetIdInput);
         if (!Validator.IsExist(vetObj, "❌ Veterinarian not found.")) return null;
+        if (vetObj == null) return null;
 
         Console.Write("\nEnter appointment date (yyyy-MM-dd HH:mm): ");
         string dateInput = Console.ReadLine()!.Trim();
@@ -80,18 +82,22 @@ public class AppointmentService
     /// </summary>
     public static void ViewAppointments(List<Appointment> appointments)
     {
-        if (!Validator.IsExist(appointments, "⚠️ No appointments registered.")) return;
+        if (appointments == null || appointments.Count == 0)
+        {
+            Console.WriteLine("⚠️  No appointments registered");
+            return;
+        }
 
         Console.WriteLine("\n--- 📋 Appointments List ---");
         foreach (var a in appointments)
         {
-            Console.WriteLine($"\nID: {a.Id}");
-            Console.WriteLine($"Pet ID: {a.PetId}");
-            Console.WriteLine($"Veterinarian ID: {a.VeterinarianId}");
-            Console.WriteLine($"Date: {a.DateTime}");
-            Console.WriteLine($"Service: {a.ServiceType}");
-            Console.WriteLine($"Reason: {a.Reason}");
-            Console.WriteLine($"Status: {a.Status}");
+            Console.WriteLine($"\n🆔 Appointment ID: {a.Id}");
+            Console.WriteLine($"🐾 Pet ID: {a.PetId}");
+            Console.WriteLine($"🩺 Veterinarian ID: {a.VeterinarianId}");
+            Console.WriteLine($"📅 Date: {a.DateTime}");
+            Console.WriteLine($"🧼 Service: {a.ServiceType}");
+            Console.WriteLine($"🗒️ Reason: {a.Reason}");
+            Console.WriteLine($"📌 Status: {a.Status}");
         }
     }
 
@@ -107,6 +113,7 @@ public class AppointmentService
         string idInput = Console.ReadLine()!.Trim();
         var appointment = appointments.FirstOrDefault(a => a.Id.ToString() == idInput);
         if (!Validator.IsExist(appointment, "❌ Appointment not found.")) return;
+        if (appointment == null) return;
 
         Console.WriteLine("\nPossible statuses:");
         foreach (var status in Enum.GetValues(typeof(AppointmentStatus)))
@@ -134,10 +141,13 @@ public class AppointmentService
 
         Console.Write("\nEnter Appointment ID to remove: ");
         string idInput = Console.ReadLine()!.Trim();
-        var appointment = appointments.FirstOrDefault(a => a.Id.ToString() == idInput);
-        if (!Validator.IsExist(appointment, "❌ Appointment not found.")) return;
-
-        appointments.Remove(appointment);
+        var appointment = appointments?.FirstOrDefault(a => a.Id.ToString() == idInput);
+        if (appointment == null)
+        {
+            Console.WriteLine("❌ Appointment not found.");
+            return;
+        }
+        appointments?.Remove(appointment);
 
         Console.WriteLine($"✅ Appointment removed successfully.");
     }
@@ -155,69 +165,100 @@ public class AppointmentService
 
         Console.Write("\nEnter Appointment ID to update: ");
         string idInput = Console.ReadLine()!.Trim();
-        var appointment = appointments.FirstOrDefault(a => a.Id.ToString() == idInput);
-        if (!Validator.IsExist(appointment, "❌ Appointment not found.")) return;
+        var appointment = appointments?.FirstOrDefault(a => a.Id.ToString() == idInput);
+        if (appointment == null)
+        {
+            Console.WriteLine("❌ Appointment not found.");
+            return;
+        }
 
+        UpdatePetIfRequested(appointment, petRepo);
+        UpdateVetIfRequested(appointment, vetRepo);
+        UpdateDateIfRequested(appointment);
+        UpdateServiceIfRequested(appointment);
+        UpdateReasonIfRequested(appointment);
+
+        Console.WriteLine("\n✅ Appointment updated successfully.");
+    }
+
+    // 🔹 Submétodo para actualizar la mascota
+    private static void UpdatePetIfRequested(Appointment appointment, Repository<Pet> petRepo)
+    {
         Console.WriteLine("\nUpdate Pet? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            var pets = petRepo.GetAll().ToList();
-            Console.WriteLine("\n--- 🐾 Pet List ---");
-            foreach (var pet in pets)
-                Console.WriteLine($"ID: {pet.Id} | Name: {pet.Name}");
-            Console.Write("Enter new Pet ID: ");
-            string petIdInput = Console.ReadLine()!.Trim();
-            var petObj = pets.FirstOrDefault(p => p.Id.ToString() == petIdInput);
-            if (Validator.IsExist(petObj, "❌ Pet not found."))
-                appointment.PetId = petObj.Id;
-        }
+        if (Console.ReadLine()!.Trim().ToLower() != "y") return;
 
+        var pets = petRepo.GetAll().ToList();
+        Console.WriteLine("\n--- 🐾 Pet List ---");
+        foreach (var pet in pets)
+            Console.WriteLine($"ID: {pet.Id} | Name: {pet.Name}");
+
+        Console.Write("Enter new Pet ID: ");
+        string petIdInput = Console.ReadLine()!.Trim();
+        var petObj = pets.FirstOrDefault(p => p.Id.ToString() == petIdInput);
+
+        if (Validator.IsExist(petObj, "❌ Pet not found."))
+            appointment.PetId = petObj!.Id;
+    }
+
+    // 🔹 Submétodo para actualizar el veterinario
+    private static void UpdateVetIfRequested(Appointment appointment, Repository<Veterinarian> vetRepo)
+    {
         Console.WriteLine("\nUpdate Veterinarian? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            var vets = vetRepo.GetAll().ToList();
-            Console.WriteLine("\n--- 🩺 Veterinarian List ---");
-            foreach (var vet in vets)
-                Console.WriteLine($"ID: {vet.Id} | Name: {vet.Name}");
-            Console.Write("Enter new Veterinarian ID: ");
-            string vetIdInput = Console.ReadLine()!.Trim();
-            var vetObj = vets.FirstOrDefault(v => v.Id.ToString() == vetIdInput);
-            if (Validator.IsExist(vetObj, "❌ Veterinarian not found."))
-                appointment.VeterinarianId = vetObj.Id;
-        }
+        if (Console.ReadLine()!.Trim().ToLower() != "y") return;
 
+        var vets = vetRepo.GetAll().Where(v => v.IsActive).ToList(); // solo activos
+        Console.WriteLine("\n--- 🩺 Veterinarian List ---");
+        foreach (var vet in vets)
+            Console.WriteLine($"ID: {vet.Id} | Name: {vet.Name}");
+
+        Console.Write("Enter new Veterinarian ID: ");
+        string vetIdInput = Console.ReadLine()!.Trim();
+        var vetObj = vets.FirstOrDefault(v => v.Id.ToString() == vetIdInput);
+
+        if (Validator.IsExist(vetObj, "❌ Veterinarian not found."))
+            appointment.VeterinarianId = vetObj!.Id;
+    }
+
+    // 🔹 Submétodo para actualizar la fecha
+    private static void UpdateDateIfRequested(Appointment appointment)
+    {
         Console.WriteLine("\nUpdate Date? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            Console.Write("Enter new appointment date (yyyy-MM-dd HH:mm): ");
-            string dateInput = Console.ReadLine()!.Trim();
-            if (DateTime.TryParse(dateInput, out DateTime dateTime))
-                appointment.DateTime = dateTime;
-            else
-                Console.WriteLine("❌ Invalid date format. Date not updated.");
-        }
+        if (Console.ReadLine()!.Trim().ToLower() != "y") return;
 
+        Console.Write("Enter new appointment date (yyyy-MM-dd HH:mm): ");
+        string dateInput = Console.ReadLine()!.Trim();
+        if (DateTime.TryParse(dateInput, out DateTime dateTime))
+            appointment.DateTime = dateTime;
+        else
+            Console.WriteLine("❌ Invalid date format. Date not updated.");
+    }
+
+    // 🔹 Submétodo para actualizar el tipo de servicio
+    private static void UpdateServiceIfRequested(Appointment appointment)
+    {
         Console.WriteLine("\nUpdate Service? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            Console.WriteLine("Available Services:");
-            foreach (var service in Enum.GetValues(typeof(ServiceType)))
-                Console.WriteLine($"{(int)service}. {service}");
-            Console.Write("Select new service number: ");
-            string serviceInput = Console.ReadLine()!.Trim();
-            if (int.TryParse(serviceInput, out int serviceInt) && Enum.IsDefined(typeof(ServiceType), serviceInt))
-                appointment.ServiceType = (ServiceType)serviceInt;
-            else
-                Console.WriteLine("❌ Invalid service type. Service not updated.");
-        }
+        if (Console.ReadLine()!.Trim().ToLower() != "y") return;
 
+        Console.WriteLine("\nAvailable Services:");
+        foreach (var service in Enum.GetValues(typeof(ServiceType)))
+            Console.WriteLine($"{(int)service}. {service}");
+
+        Console.Write("Select new service number: ");
+        string serviceInput = Console.ReadLine()!.Trim();
+
+        if (int.TryParse(serviceInput, out int serviceInt) && Enum.IsDefined(typeof(ServiceType), serviceInt))
+            appointment.ServiceType = (ServiceType)serviceInt;
+        else
+            Console.WriteLine("❌ Invalid service type. Service not updated.");
+    }
+
+    // 🔹 Submétodo para actualizar la razón
+    private static void UpdateReasonIfRequested(Appointment appointment)
+    {
         Console.WriteLine("\nUpdate Reason? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            Console.Write("Enter new reason: ");
-            appointment.Reason = Console.ReadLine() ?? "";
-        }
+        if (Console.ReadLine()!.Trim().ToLower() != "y") return;
 
-        Console.WriteLine("✅ Appointment updated successfully.");
+        Console.Write("Enter new reason: ");
+        appointment.Reason = Console.ReadLine() ?? "";
     }
 }

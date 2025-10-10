@@ -16,9 +16,10 @@ public class ConsoleUI : IConsoleUI
         Console.WriteLine("\n📋 Main Menu:");
         Console.WriteLine("1️⃣  Customers Module");
         Console.WriteLine("2️⃣  Pets Module 🐕🐈");
-        Console.WriteLine("3️⃣  Queries 🔍");
-        Console.WriteLine("4️⃣  Coming soon");
-        Console.WriteLine("5️⃣  Exit 🚪");
+        Console.WriteLine("3️⃣  Veterinarians Module");
+        Console.WriteLine("4️⃣  Appointments Module");
+        Console.WriteLine("5️⃣  Queries 🔍");
+        Console.WriteLine("6️⃣  Exit 🚪");
     }
 
     /// <summary>
@@ -89,6 +90,7 @@ public class ConsoleUI : IConsoleUI
         Console.WriteLine("\n📋 Veterinarian Main Menu:");
         Console.WriteLine("1️⃣  Veterinarian CRUD");
         Console.WriteLine("2️⃣  Appointments");
+        Console.WriteLine("3️⃣  Back to Main Menu 🔙");
     }
 
     public static void ShowVeterinarianCRUD()
@@ -98,31 +100,32 @@ public class ConsoleUI : IConsoleUI
         Console.WriteLine("2️⃣  View veterinarians");
         Console.WriteLine("3️⃣  Update a veterinarian");
         Console.WriteLine("4️⃣  Delete a veterinarian");
-        Console.WriteLine("5️⃣  Back to Main Menu 🔙");
+        Console.WriteLine("5️⃣  Back to Veterinarian Main Menu 🔙");
     }
 
     public static void ShowAppointmentsVeterinarianMenu()
     {
-        Console.WriteLine("\n📋Appointments Veterinarian Menu:");
+        Console.WriteLine("\n📋 Appointments Veterinarian Menu:");
         Console.WriteLine("1️⃣  See appointments by veterinarian");
         Console.WriteLine("2️⃣  Change the status of an appointment");
+        Console.WriteLine("2️⃣  an appointment");
         Console.WriteLine("3️⃣  Back to Main Menu 🔙");
     }
 
     public static void ShowAppointmentsMainMenu()
     {
-        Console.WriteLine("\n📋Appointments Main Menu:");
+        Console.WriteLine("\n📋 Appointments Main Menu:");
         Console.WriteLine("1️⃣  Appointments CRUD");
-        Console.WriteLine("5️⃣  Back to Main Menu 🔙");
+        Console.WriteLine("2️⃣  Back to Main Menu 🔙");
     }
 
     public static void ShowAppointmentsCRUD()
     {
-        Console.WriteLine("\n📋Appointments CRUD:");
+        Console.WriteLine("\n📋 Appointments CRUD:");
         Console.WriteLine("1️⃣  Register appointment");
         Console.WriteLine("2️⃣  View appointments");
         Console.WriteLine("3️⃣  Update a appointment");
         Console.WriteLine("4️⃣  Delete a appointment");
-        Console.WriteLine("5️⃣  Back to Main Menu 🔙");
+        Console.WriteLine("5️⃣  Back to Appointments Main Menu 🔙");
     }
 }

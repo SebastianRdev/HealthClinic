@@ -82,9 +82,6 @@ public class VeterinarianService
         string email = Validator.ValidateContentEmpty("\n📧 New email (leave empty to keep): ", allowEmpty: true);
         if (!string.IsNullOrWhiteSpace(email)) vet.Email = email;
 
-        string licenseNumber = Validator.ValidateContentEmpty("\n🔢 New license (leave empty to keep): ", allowEmpty: true);
-        if (!string.IsNullOrWhiteSpace(licenseNumber)) vet.LicenseNumber = licenseNumber;
-
         Console.WriteLine("\nDo you want to change the specialty? (y/n): ");
         if (Console.ReadLine()!.Trim().ToLower() == "y")
         {
@@ -97,7 +94,6 @@ public class VeterinarianService
                 vet.Specialty = (Specialties)specialtyInt;
         }
 
-        Console.WriteLine($"✅ Veterinarian '{vet.Name}' updated successfully.");
         return vet;
     }
 
@@ -129,20 +125,27 @@ public class VeterinarianService
     /// </summary>
     public static void RemoveVeterinarian(List<Veterinarian> vetList)
     {
-        Console.WriteLine("\n--- 🗑️ Remove Veterinarian ---");
+        Console.WriteLine("\n--- 💤 Deactivate Veterinarian ---");
         ViewVeterinarians(vetList);
 
-        Console.Write("\nEnter the ID of the veterinarian to remove: ");
+        Console.Write("\nEnter the ID of the veterinarian to deactivate: ");
         string vetIdInput = Console.ReadLine()!.Trim();
 
         var vet = vetList.FirstOrDefault(v => v.Id.ToString() == vetIdInput);
         if (!Validator.IsExist(vet, "❌ No veterinarian found with that ID")) return;
         if (vet == null) return;
 
-        Console.WriteLine($"🗑️ Removing veterinarian: {vet.Name} (ID: {vet.Id})");
+        if (!vet.IsActive)
+        {
+            Console.WriteLine($"⚠️ Veterinarian '{vet.Name}' is already inactive.");
+            return;
+        }
 
-        vetList.Remove(vet);
+        Console.WriteLine($"😴 Deactivating veterinarian: {vet.Name} (ID: {vet.Id})");
 
-        Console.WriteLine($"✅ Veterinarian '{vet.Name}' removed successfully.");
+        vet.IsActive = false;
+
+        Console.WriteLine($"✅ Veterinarian '{vet.Name}' has been marked as inactive.");
     }
+
 }
