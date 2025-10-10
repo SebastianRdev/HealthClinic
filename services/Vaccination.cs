@@ -1,4 +1,4 @@
-namespace HealthClinic.models;
+namespace HealthClinic.services;
 
 /// <summary>
 /// Represents the vaccination service performed by a veterinarian. It inherits the logic of the veterinary service.

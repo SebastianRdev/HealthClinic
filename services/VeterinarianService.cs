@@ -1,4 +1,4 @@
-namespace HealthClinic.models;
+namespace HealthClinic.services;
 
 /// <summary>
 /// Abstract base class for veterinary services in the HealthClinic system. Defines the care method that each specific service must implement.
