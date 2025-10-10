@@ -6,10 +6,7 @@ using HealthClinic.services;
 using HealthClinic.utils;
 public class QuerysMenu
 {
-    /// <summary>
-    /// List of customers used for customer-related operations.
-    /// </summary>
-    static List<Customer> customerList = new Repository<Customer>().GetAll();
+    static RepositoryDict<Customer> customerDictRep = new RepositoryDict<Customer>();
 
     /// <summary>
     /// List of pets used for pet-related operations.
@@ -32,7 +29,7 @@ public class QuerysMenu
                 switch (choice)
                 {
                     case 1:
-                        CustomerService.FilterCustomersByPetAge(customerList);
+                        CustomerService.FilterCustomersByPetAge(customerDictRep.GetAll());
                         continue;
                     case 2:
                         PetService.MainSort(petList);
@@ -41,19 +38,19 @@ public class QuerysMenu
                         PetService.GroupPetsBySpecies(petList);
                         continue;
                     case 4:
-                        PetService.CombinedConsultation(customerList);
+                        PetService.CombinedConsultation(customerDictRep.GetAll());
                         continue;
                     case 5:
-                        CustomerService.YoungestOrOlderCustomer(customerList);
+                        CustomerService.YoungestOrOlderCustomer(customerDictRep.GetAll());
                         continue;
                     case 6:
                         PetService.PetsOfEachSpecies(petList);
                         continue;
                     case 7:
-                        CustomerService.CustomerUnknownPetBreed(customerList);
+                        CustomerService.CustomerUnknownPetBreed(customerDictRep.GetAll());
                         continue;
                     case 8:
-                        CustomerService.CustomersInCapitalityAlphabetically(customerList);
+                        CustomerService.CustomersInCapitalityAlphabetically(customerDictRep.GetAll());
                         continue;
                     case 9:
                         break; // Back the main menu

@@ -9,11 +9,6 @@ using HealthClinic.models;
 public class Database
 {
     /// <summary>
-    /// List of customers registered in the system.
-    /// </summary>
-    public static List<Customer> Customers { get; } = [];
-
-    /// <summary>
     /// Dictionary of clients indexed by Guid for quick access.
     /// </summary>
     public static Dictionary<Guid, Customer> CustomersDict { get; } = new();

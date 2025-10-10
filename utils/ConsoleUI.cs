@@ -17,7 +17,7 @@ public class ConsoleUI : IConsoleUI
         Console.WriteLine("1️⃣  Customers Module");
         Console.WriteLine("2️⃣  Pets Module 🐕🐈");
         Console.WriteLine("3️⃣  Queries 🔍");
-        Console.WriteLine("4️⃣  Comming soon");
+        Console.WriteLine("4️⃣  Coming soon");
         Console.WriteLine("5️⃣  Exit 🚪");
     }
 

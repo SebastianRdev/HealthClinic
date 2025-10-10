@@ -29,7 +29,7 @@ public class MainMenu
                         QuerysMenu.Querys();
                         continue;
                     case 4:
-
+                        // Coming soon
                         continue;
                     case 5:
                         Console.WriteLine("\n👋 Thanks for using HealthClinic System. Goodbye! 🐶🐱");
