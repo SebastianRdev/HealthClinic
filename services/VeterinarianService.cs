@@ -148,4 +148,61 @@ public class VeterinarianService
         Console.WriteLine($"✅ Veterinarian '{vet.Name}' has been marked as inactive.");
     }
 
+    /// <summary>
+    /// Allows a veterinarian to attend a selected appointment.
+    /// </summary>
+    public static void AttendAppointment()
+    {
+        var appointmentRepo = new Repository<Appointment>();
+        var appointments = appointmentRepo.GetAll();
+
+        if (!Validator.IsExist(appointments, "⚠️  No hay citas registradas")) return;
+
+        Console.WriteLine("\n--- 📅 Lista de Citas ---");
+        foreach (var app in appointments)
+        {
+            Console.WriteLine($"\n🆔 ID: {app.Id}");
+            Console.WriteLine($"👤 Mascota: {app.Pet.Name}");
+            Console.WriteLine($"👨‍⚕️ Veterinario: {app.Veterinarian.Name}");
+            Console.WriteLine($"📅 Fecha: {app.Date}");
+            Console.WriteLine($"🩺 Servicio: {app.ServiceType}");
+            Console.WriteLine($"✅ Atendida: {(app.IsAttended ? "Sí" : "No")}");
+        }
+
+        Console.Write("\nIngrese el ID de la cita a atender: ");
+        string appIdInput = Console.ReadLine()!.Trim();
+        var appointment = appointments.FirstOrDefault(a => a.Id.ToString() == appIdInput);
+
+        if (!Validator.IsExist(appointment, "❌ No se encontró una cita con ese ID")) return;
+        if (appointment == null) return;
+        if (appointment.IsAttended)
+        {
+            Console.WriteLine("⚠️ La cita ya fue atendida.");
+            return;
+        }
+
+        // Simulación de atención según el tipo de servicio
+        VeterinaryService service;
+        switch (appointment.ServiceType)
+        {
+            case ServiceType.GeneralConsultation:
+                service = new GeneralConsultation();
+                break;
+            case ServiceType.Vaccination:
+                service = new Vaccination();
+                break;
+            // Agrega más casos si tienes otros servicios
+            default:
+                Console.WriteLine("Servicio no implementado.");
+                return;
+        }
+
+        Console.WriteLine($"\nEl veterinario '{appointment.Veterinarian.Name}' atiende la cita:");
+        service.Attend();
+
+        appointment.IsAttended = true;
+        appointmentRepo.Update(appointment);
+
+        Console.WriteLine("✅ La cita ha sido atendida correctamente.");
+    }
 }
