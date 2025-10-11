@@ -76,7 +76,10 @@ public class CustomerService
         new RepositoryDict<Customer>().Add(newCustomer);
     }
 
-    public static void UpdateCustomerMenu()
+    /// <summary>
+    /// Updates the information of an existing customer.
+    /// </summary>
+    public static void UpdateCustomer()
     {
         Console.WriteLine("\n--- 📝 Update Customer ---");
         var customers = customerDictRep.GetAll().ToList();
@@ -121,17 +124,14 @@ public class CustomerService
             Console.WriteLine("\n✅ Pet updated successfully!");
         }
 
-        UpdateCustomer(customer, customerDictRep);
+        customerDictRep.Update(customer);
         Console.WriteLine("\n✅ Customer updated successfully!");
     }
 
 
-    public static void UpdateCustomer(Customer updateCustomer, RepositoryDict<Customer> customerDictRep)
-    {
-        customerDictRep.Update(updateCustomer);
-    }
-
-
+    /// <summary>
+    /// Removes a customer and disassociates their pets from them.
+    /// </summary>
     public static void RemoveCustomer()
     {
         Console.Write("\nEnter the customer ID to remove: ");
@@ -145,7 +145,7 @@ public class CustomerService
         foreach (var pet in customer.Pets)
         {
             Console.WriteLine($"🐾 Disassociating pet: {pet.Name} (ID: {pet.Id}) from {customer.Name}");
-            pet.Owner = null; // Desvincular la mascota del dueño
+            pet.Owner = null; // Disassociate the pet from the owner
         }
 
         customerDictRep.Remove(customer.Id);
@@ -153,8 +153,9 @@ public class CustomerService
         Console.WriteLine($"✅ Customer {customer.Name} and their pets have been successfully removed.");
     }
 
-
-
+    /// <summary>
+    /// Displays a list of available customers with their IDs and names.
+    /// </summary>
     public static void ShowAvailableCustomers(List<Customer> CustomerList)
     {
         Console.WriteLine("\n--- 👥 Available Customers ---");
@@ -164,6 +165,9 @@ public class CustomerService
         }
     }
 
+    /// <summary>
+    /// Displays detailed information about all customers and their pets.
+    /// </summary>
     public static void ViewCustomers()
     {
         var CustomerList = customerDictRep.GetAll();
@@ -196,6 +200,9 @@ public class CustomerService
         }
     }
 
+    /// <summary>
+    /// Displays detailed information about a list of customers and their pets.
+    /// <summary>
     public static void ViewCustomers(List<Customer> CustomerList)
     {
 
@@ -258,6 +265,9 @@ public class CustomerService
         }
     }
 
+    /// <summary>
+    /// Displays a list of customers with their IDs and names.
+    /// </summary>
     public static void ViewCustomersById(List<Customer> CustomerList)
     {
         if (!Validator.IsExist(CustomerList, "⚠️  No customers found")) return;
@@ -315,8 +325,6 @@ public class CustomerService
     /// <summary>
     /// Filter customers who have pets of a specific age and display the results
     /// </summary>
-    /// <param name="CustomerList">List of customers</param>
-
     public static void FilterCustomersByPetAge(List<Customer> CustomerList)
     {
         if (!Validator.IsExist(CustomerList, "⚠️  No customers found")) return;
@@ -378,7 +386,6 @@ public class CustomerService
     /// <summary>
     /// Allows the user to check the youngest or oldest customer.
     /// </summary>
-    /// <param name="CustomerList">List of customers</param>
     public static void YoungestOrOlderCustomer(List<Customer> CustomerList)
     {
         if (!Validator.IsExist(CustomerList, "⚠️  No customers found")) return;
@@ -448,7 +455,6 @@ public class CustomerService
     /// <summary>
     /// Shows customers who have at least one pet of unknown breed.
     /// </summary>
-    /// <param name="customerList">List of customers</param>
     public static void CustomerUnknownPetBreed(List<Customer> customerList)
     {
         var selectedCustomers = customerList.Where(c => c.Pets.Any(p => p.Breed == "unknown")).ToList();

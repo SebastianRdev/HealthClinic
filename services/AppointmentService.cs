@@ -181,6 +181,9 @@ public class AppointmentService
         Console.WriteLine("\n✅ Appointment updated successfully.");
     }
 
+    /// <summary>
+    /// Updates the pet information in the appointment if requested.
+    /// </summary>
     private static void UpdatePetIfRequested(Appointment appointment, Repository<Pet> petRepo)
     {
         Console.WriteLine("\nUpdate Pet? (y/n): ");
@@ -199,6 +202,9 @@ public class AppointmentService
             appointment.PetId = petObj!.Id;
     }
 
+    /// <summary>
+    /// Updates the veterinarian information in the appointment if requested.
+    /// </summary>
     private static void UpdateVetIfRequested(Appointment appointment, Repository<Veterinarian> vetRepo)
     {
         Console.WriteLine("\nUpdate Veterinarian? (y/n): ");
@@ -217,6 +223,9 @@ public class AppointmentService
             appointment.VeterinarianId = vetObj!.Id;
     }
 
+    /// <summary>
+    /// Updates the date of the appointment if requested.
+    /// </summary>
     private static void UpdateDateIfRequested(Appointment appointment)
     {
         Console.WriteLine("\nUpdate Date? (y/n): ");
@@ -230,6 +239,9 @@ public class AppointmentService
             Console.WriteLine("❌ Invalid date format. Date not updated");
     }
 
+    /// <summary>
+    /// Updates the service type of the appointment if requested.
+    /// </summary>
     private static void UpdateServiceIfRequested(Appointment appointment)
     {
         Console.WriteLine("\nUpdate Service? (y/n): ");
@@ -248,6 +260,9 @@ public class AppointmentService
             Console.WriteLine("❌ Invalid service type. Service not updated");
     }
 
+    /// <summary>
+    /// Updates the reason for the appointment if requested.
+    /// </summary>
     private static void UpdateReasonIfRequested(Appointment appointment)
     {
         Console.WriteLine("\nUpdate Reason? (y/n): ");

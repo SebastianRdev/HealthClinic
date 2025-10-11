@@ -1,9 +1,7 @@
 namespace HealthClinic.menus;
 
-using HealthClinic.models;
 using HealthClinic.services;
 using HealthClinic.utils;
-using HealthClinic.repositories;
 public class CustomerMenu
 {
     public static void CustomerMainMenu()

@@ -24,11 +24,6 @@ public class Appointment : IEntity
 
     public string Notes { get; set; } = string.Empty;
 
-    // 🔽 Relaciones directas opcionales
-    public Pet? Pet { get; set; }
-    public Veterinarian? Veterinarian { get; set; }
-    public bool IsAttended => Status == AppointmentStatus.Completed;
-
 
     public Appointment(Guid petId, Guid veterinarianId, DateTime dateTime, ServiceType serviceType, string reason)
     {

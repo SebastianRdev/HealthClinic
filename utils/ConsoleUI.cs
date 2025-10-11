@@ -85,6 +85,9 @@ public class ConsoleUI : IConsoleUI
         Console.WriteLine("9️⃣  Back to Main Menu 🔙");
     }
 
+    /// <summary>
+    /// Displays the VeterinarianMainMenu on the console.
+    /// </summary>
     public static void ShowVeterinarianMainMenu()
     {
         Console.WriteLine("\n📋 Veterinarian Main Menu:");
@@ -93,6 +96,9 @@ public class ConsoleUI : IConsoleUI
         Console.WriteLine("3️⃣  Back to Main Menu 🔙");
     }
 
+    /// <summary>
+    /// Displays the VeterinarianCRUD on the console.
+    /// </summary>
     public static void ShowVeterinarianCRUD()
     {
         Console.WriteLine("\n📋 Veterinarian CRUD:");
@@ -103,6 +109,9 @@ public class ConsoleUI : IConsoleUI
         Console.WriteLine("5️⃣  Back to Veterinarian Main Menu 🔙");
     }
 
+    /// <summary>
+    /// Displays the AppointmentsVeterinarianMenu on the console.
+    /// </summary>
     public static void ShowAppointmentsVeterinarianMenu()
     {
         Console.WriteLine("\n📋 Appointments Veterinarian Menu:");
@@ -111,6 +120,9 @@ public class ConsoleUI : IConsoleUI
         Console.WriteLine("3️⃣  Back to Main Menu 🔙");
     }
 
+    /// <summary>
+    /// Displays the AppointmentsMainMenu on the console.
+    /// </summary>
     public static void ShowAppointmentsMainMenu()
     {
         Console.WriteLine("\n📋 Appointments Main Menu:");
@@ -118,6 +130,9 @@ public class ConsoleUI : IConsoleUI
         Console.WriteLine("2️⃣  Back to Main Menu 🔙");
     }
 
+    /// <summary>
+    /// Displays the AppointmentsCRUD on the console.
+    /// </summary>
     public static void ShowAppointmentsCRUD()
     {
         Console.WriteLine("\n📋 Appointments CRUD:");

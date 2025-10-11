@@ -62,7 +62,6 @@ public class PetService
     /// <summary>
     /// Displays the list of pets and their owners on the console.
     /// </summary>
-    /// <param name="PetList">List of customers to display</param>
     public static void ViewPets(List<Pet> PetList)
     {
         if (!Validator.IsExist(PetList, "⚠️  No pets found")) return;
@@ -79,6 +78,9 @@ public class PetService
         }
     }
 
+    /// <summary>
+    /// Edits the information of an existing pet.
+    /// </summary>
     public static Pet EditPet(Pet pet)
     {
         Console.WriteLine("\n--- 📝 Update Pet 🐕 ---");
@@ -99,6 +101,9 @@ public class PetService
         return pet;
     }
 
+    /// <summary>
+    /// Updates an existing pet interactively.
+    /// <summary>
     public static void UpdatedPet(List<Pet> petList)
     {
         Console.WriteLine("\n--- 📝 Update Pet ---");
@@ -120,6 +125,9 @@ public class PetService
         Console.WriteLine("✅ Pet updated successfully!");
     }
 
+    /// <summary>
+    /// Removes a pet from the system, disassociating it from its owner if necessary
+    /// <summary>
     public static void RemovePet(List<Pet> petList)
     {
         Console.WriteLine("\n--- 📝 Remove Pet ---");
@@ -135,7 +143,7 @@ public class PetService
 
         Console.WriteLine($"🗑️ Removing pet: {pet.Name} (ID: {pet.Id})");
 
-        // Desvincular al dueño de la mascota
+        // Disassociate the pet owner
         if (pet.Owner != null)
         {
             Console.WriteLine($"🐾 Disassociating pet: {pet.Name} from owner: {pet.Owner.Name}");
@@ -169,25 +177,10 @@ public class PetService
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // QUERIES
     /// <summary>
     /// Allows the user to sort the list of pets by name, age, or species, in ascending or descending order.
     /// </summary>
-    /// <param name="PetList">List of pets to be sorted</param>
     public static void MainSort(List<Pet> PetList)
     {
         int order;
@@ -299,7 +292,6 @@ public class PetService
     /// <summary>
     /// Group pets by species and display the result.
     /// </summary>
-    /// <param name="PetList">List of pets</param>
     public static void GroupPetsBySpecies(List<Pet> PetList)
     {
         if (!Validator.IsExist(PetList, "⚠️  No pets found")) return;
@@ -312,9 +304,8 @@ public class PetService
     }
 
     /// <summary>
-    /// Muestra el resultado de agrupar mascotas por especie.
+    /// Shows the result of grouping pets by species.
     /// </summary>
-    /// <param name="groupedPets">Colección agrupada por especie.</param>
     public static void ShowGroupPetsBySpecies(IEnumerable<IGrouping<string, Pet>> groupedPets)
     {
         Console.WriteLine("\n--- 🐾 Pets Grouped by Species ---");
@@ -336,7 +327,6 @@ public class PetService
     /// <summary>
     /// Combined query showing customers with 3-year-old dogs.
     /// </summary>
-    /// <param name="CustomerList">List of customers</param>
     public static void CombinedConsultation(List<Customer> CustomerList)
     {
         var result = CustomerList
@@ -367,7 +357,6 @@ public class PetService
     /// <summary>
     /// Shows the number of pets by species.
     /// </summary>
-    /// <param name="PetList">List of pets</param>
     public static void PetsOfEachSpecies(List<Pet> PetList)
     {
         var speciesCount = PetList.GroupBy(p => p.Species)
@@ -379,7 +368,6 @@ public class PetService
     /// <summary>
     /// Shows the result of the query for the number of pets by species.
     /// </summary>
-    /// <param name="speciesCount">Collection of species and quantities</param>
     public static void ShowPetsOfEachSpecies(IEnumerable<dynamic> speciesCount)
     {
         Console.WriteLine("\n--- 🐾 Pets of Each Species ---");

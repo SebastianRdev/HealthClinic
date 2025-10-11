@@ -8,10 +8,10 @@ using HealthClinic.models;
 public static class Validator
 {
     /// <summary>
-    /// Solicita y valida que el contenido ingresado no esté vacío.
+    /// Requests and validates that the entered content is not empty.
     /// </summary>
-    /// <param name="prompt">Mensaje a mostrar</param>
-    /// <returns>Texto validado</returns>
+    /// <param name="prompt">Message to display</param>
+    /// <returns>Validated text</returns>
     public static string ValidateContent(string prompt)
     {
         string input;
@@ -25,10 +25,10 @@ public static class Validator
     }
 
     /// <summary>
-    /// Solicita y valida que el número ingresado sea positivo.
+    /// Requests and validates that the entered number is positive.
     /// </summary>
-    /// <param name="prompt">Mensaje a mostrar</param>
-    /// <returns>Entero positivo validado</returns>
+    /// <param name="prompt">Message to display</param>
+    /// <returns>Validated positive integer</returns>
     public static int ValidatePositiveInt(string prompt)
     {
         int value;
@@ -48,6 +48,9 @@ public static class Validator
         }
     }
 
+    /// <summary>
+    /// Requests and validates that the entered content is not empty, with an option to allow empty input.
+    /// </summary>
     public static string ValidateContentEmpty(string prompt, bool allowEmpty = false)
     {
         string input;
@@ -96,6 +99,9 @@ public static class Validator
         return true;
     }
 
+    /// <summary>
+    /// Checks whether a list or object exists (is not null or empty) and displays a message if it does not.
+    /// </summary>
     public static bool IsExist<T>(List<T>? list, string message)
     {
         if (list == null || list.Count == 0)
@@ -106,6 +112,9 @@ public static class Validator
         return true;
     }
 
+    /// <summary>
+    /// Checks whether an object exists (is not null) and displays a message if it does not.
+    /// </summary>
     public static bool IsExist<T>(T? obj, string message) where T : class
     {
         if (obj == null)
