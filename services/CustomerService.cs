@@ -244,27 +244,6 @@ public class CustomerService
     }
 
 
-    // /// <summary>
-    // /// Search for customers by name and display the results found.
-    // /// </summary>
-    // /// <param name="CustomerList">List of customers</param>
-    // /// <param name="name">Name to display</param>
-    // // public static void SearchCustomerByName(List<Customer> CustomerList, string name)
-    // // {
-    // //     Console.Write("\n🔍 Enter customer name to search: ");
-    // //     string searchName = Console.ReadLine()!;
-    // //     var foundCustomers = CustomerList.Where(c => c.Name!.Equals(searchName, StringComparison.OrdinalIgnoreCase));
-    // //     if (foundCustomers.Count == 0)
-    // //     {
-    // //         Console.WriteLine("⚠️  No customers found with that name.");
-    // //         return;
-    // //     }
-    // //     Console.WriteLine($"\n📋 --- Customers Found with Name: {searchName} ---");
-    // //     Console.WriteLine("----------------------------------------------------");
-    // //     ViewCustomers(foundCustomers);
-    // //     Console.WriteLine("----------------------------------------------------");
-    // // }
-
 
     // FILTERS
 

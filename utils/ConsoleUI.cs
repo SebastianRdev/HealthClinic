@@ -108,7 +108,6 @@ public class ConsoleUI : IConsoleUI
         Console.WriteLine("\n📋 Appointments Veterinarian Menu:");
         Console.WriteLine("1️⃣  See appointments by veterinarian");
         Console.WriteLine("2️⃣  Change the status of an appointment");
-        Console.WriteLine("2️⃣  an appointment");
         Console.WriteLine("3️⃣  Back to Main Menu 🔙");
     }
 

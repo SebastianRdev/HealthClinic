@@ -1,9 +1,6 @@
 ﻿namespace HealthClinic;
 
-using HealthClinic.models;
-using HealthClinic.repositories;
 using HealthClinic.menus;
-using HealthClinic.models.Enums;
 
 /// <summary>
 /// Main class of the HealthClinic system. Orchestrates the application flow, initializes the main data, and manages user interaction through menus.
