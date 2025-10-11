@@ -101,9 +101,6 @@ public class VeterinarianMenu
                         //
                         continue;
                     case 3:
-                        VeterinarianService.AttendAppointment();
-                        continue;
-                    case 4:
                         Console.WriteLine("\nBack to main menu");
                         break;
                     default:

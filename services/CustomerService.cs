@@ -10,6 +10,8 @@ using HealthClinic.repositories;
 /// </summary>
 public class CustomerService
 {
+    private static readonly RepositoryDict<Customer> customerDictRep = new();
+    private static readonly Repository<Pet> _petRepo = new();
 
     /// <summary>
     /// Orchestrate the process of registering a new customer, displaying the menu, and saving the information.
@@ -74,7 +76,7 @@ public class CustomerService
         new RepositoryDict<Customer>().Add(newCustomer);
     }
 
-    public static void UpdateCustomerMenu(RepositoryDict<Customer> customerDictRep)
+    public static void UpdateCustomerMenu()
     {
         Console.WriteLine("\n--- 📝 Update Customer ---");
         var customers = customerDictRep.GetAll().ToList();
@@ -130,32 +132,24 @@ public class CustomerService
     }
 
 
-    public static void RemoveCustomer(RepositoryDict<Customer> customerDictRep)
+    public static void RemoveCustomer()
     {
-        // Solicitar al usuario que ingrese el ID del cliente
         Console.Write("\nEnter the customer ID to remove: ");
         string inputId = Console.ReadLine()!.Trim();
 
-        // Verificar si el ID ingresado existe entre los clientes
         var customer = customerDictRep.GetAll().FirstOrDefault(c => c.Id.ToString() == inputId);
 
         if (!Validator.IsExist(customer, "❌ No customer found with that ID")) return;
         if (customer == null) return;
 
-        // Mostrar el nombre del cliente a eliminar
-        Console.WriteLine($"🗑️ Removing customer: {customer.Name} (ID: {customer.Id})");
-
-        // Desvincular las mascotas del dueño eliminado
         foreach (var pet in customer.Pets)
         {
             Console.WriteLine($"🐾 Disassociating pet: {pet.Name} (ID: {pet.Id}) from {customer.Name}");
             pet.Owner = null; // Desvincular la mascota del dueño
         }
 
-        // Eliminar el cliente del repositorio
         customerDictRep.Remove(customer.Id);
 
-        // Confirmación de eliminación
         Console.WriteLine($"✅ Customer {customer.Name} and their pets have been successfully removed.");
     }
 
@@ -170,8 +164,41 @@ public class CustomerService
         }
     }
 
+    public static void ViewCustomers()
+    {
+        var CustomerList = customerDictRep.GetAll();
+
+        if (!Validator.IsExist(CustomerList, "⚠️  No customers found")) return;
+        Console.WriteLine("\n--- 👥 Customer List ---");
+
+        foreach (var customer in CustomerList)
+        {
+            Console.WriteLine($"\n🆔 ID: {customer.Id}");
+            Console.WriteLine($"👤 Name: {customer.Name}");
+            Console.WriteLine($"🎂 Age: {customer.Age}");
+            Console.WriteLine($"🏠 Address: {customer.Address}");
+            Console.WriteLine($"📞 Phone: {customer.Phone}");
+            Console.WriteLine($"🐾 Pets Count: {customer.Pets.Count}");
+
+            if (customer.Pets.Count > 0)
+            {
+                Console.WriteLine("\n   --- 🐶 Pets ---");
+                foreach (var pet in customer.Pets)
+                {
+                    Console.WriteLine($"   🐾 Pet ID: {pet.Id}");
+                    Console.WriteLine($"   📛 Name: {pet.Name}");
+                    Console.WriteLine($"   🐕 Species: {pet.Species}");
+                    Console.WriteLine($"   🐾 Breed: {pet.Breed}");
+                    Console.WriteLine($"   🎂 Age: {pet.Age}");
+                    Console.WriteLine();
+                }
+            }
+        }
+    }
+
     public static void ViewCustomers(List<Customer> CustomerList)
     {
+
         if (!Validator.IsExist(CustomerList, "⚠️  No customers found")) return;
         Console.WriteLine("\n--- 👥 Customer List ---");
 
@@ -242,6 +269,33 @@ public class CustomerService
             Console.WriteLine($"👤 Name: {customer.Name}");
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

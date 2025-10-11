@@ -7,11 +7,7 @@ using HealthClinic.utils;
 public class QuerysMenu
 {
     static RepositoryDict<Customer> customerDictRep = new RepositoryDict<Customer>();
-
-    /// <summary>
-    /// List of pets used for pet-related operations.
-    /// </summary>
-    static List<Pet> petList = new Repository<Pet>().GetAll();
+    static Repository<Pet> petRep = new Repository<Pet>();
 
     /// <summary>
     /// Displays the queries submenu and manages user navigation between different types of queries about customers and pets.
@@ -32,10 +28,10 @@ public class QuerysMenu
                         CustomerService.FilterCustomersByPetAge(customerDictRep.GetAll());
                         continue;
                     case 2:
-                        PetService.MainSort(petList);
+                        PetService.MainSort(petRep.GetAll());
                         continue;
                     case 3:
-                        PetService.GroupPetsBySpecies(petList);
+                        PetService.GroupPetsBySpecies(petRep.GetAll());
                         continue;
                     case 4:
                         PetService.CombinedConsultation(customerDictRep.GetAll());
@@ -44,7 +40,7 @@ public class QuerysMenu
                         CustomerService.YoungestOrOlderCustomer(customerDictRep.GetAll());
                         continue;
                     case 6:
-                        PetService.PetsOfEachSpecies(petList);
+                        PetService.PetsOfEachSpecies(petRep.GetAll());
                         continue;
                     case 7:
                         CustomerService.CustomerUnknownPetBreed(customerDictRep.GetAll());
