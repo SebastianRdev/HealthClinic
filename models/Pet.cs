@@ -8,11 +8,6 @@ using HealthClinic.interfaces;
 public class Pet : Animal, IRegistrable, IEntity
 {
     /// <summary>
-    /// Unique identifier for the mascot. It is automatically generated when the instance is created.
-    /// </summary>
-    public Guid Id { get; private set; }
-
-    /// <summary>
     /// Pet breed. Allows you to classify it within its species.
     /// </summary>
     public string Breed { get; set; }
@@ -31,7 +26,6 @@ public class Pet : Animal, IRegistrable, IEntity
     /// <param name="age">Age of the pet</param>
     public Pet(string name, string species, string breed, int age)
     {
-        this.Id = Guid.NewGuid();
         this.Name = name;
         this.Species = species;
         this.Breed = breed;

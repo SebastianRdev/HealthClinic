@@ -9,7 +9,7 @@ using HealthClinic.interfaces;
 /// Allows you to add, query, search, delete, and update entities by their unique identifier.
 /// </summary>
 /// <typeparam name="Entity">Type of entity managed by the repository</typeparam>
-public class RepositoryDict<Entity> where Entity : class, IEntity
+public class RepositoryDict<Entity> : IRepository<Entity> where Entity : class, IEntity
 {
     /// <summary>
     /// Internal dictionary that stores entities indexed by Guid.

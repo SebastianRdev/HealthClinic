@@ -7,6 +7,9 @@ using HealthClinic.models.Enums;
 
 public class VeterinarianService
 {
+    static readonly Repository<Veterinarian> vetRepo = new();
+    static List<Veterinarian> vetList = vetRepo.GetAll();
+
     /// <summary>
     /// Registers a new veterinarian interactively.
     /// </summary>
@@ -40,6 +43,29 @@ public class VeterinarianService
 
     /// <summary>
     /// Shows the list of veterinarians.
+    /// </summary>
+    public static void ViewVeterinarians()
+    {
+        if (!Validator.IsExist(vetList, "⚠️  No veterinarians registered")) return;
+
+        Console.WriteLine("\n--- 🩺 Veterinarian List ---");
+        foreach (var vet in vetList)
+        {
+            Console.WriteLine($"\n🆔 ID: {vet.Id}");
+            Console.WriteLine($"👤 Name: {vet.Name}");
+            Console.WriteLine($"🎂 Age: {vet.Age}");
+            Console.WriteLine($"🏠 Address: {vet.Address}");
+            Console.WriteLine($"📞 Phone: {vet.Phone}");
+            Console.WriteLine($"📧 Email: {vet.Email}");
+            Console.WriteLine($"🔢 License: {vet.LicenseNumber}");
+            Console.WriteLine($"🩺 Specialty: {vet.Specialty}");
+            Console.WriteLine($"✅ Active: {(vet.IsActive ? "Yes" : "No")}");
+        }
+    }
+
+    /// <summary>
+    /// Shows the list of veterinarians.
+    /// <param name="vetList">List of veterinarians</param>
     /// </summary>
     public static void ViewVeterinarians(List<Veterinarian> vetList)
     {
@@ -99,7 +125,7 @@ public class VeterinarianService
     /// <summary>
     /// Updates a veterinarian in the list.
     /// </summary>
-    public static void UpdateVeterinarian(List<Veterinarian> vetList)
+    public static void UpdateVeterinarian()
     {
         Console.WriteLine("\n--- 📝 Update Veterinarian ---");
         ViewVeterinarians(vetList);
@@ -122,7 +148,7 @@ public class VeterinarianService
     /// <summary>
     /// Removes a veterinarian from the list.
     /// </summary>
-    public static void RemoveVeterinarian(List<Veterinarian> vetList)
+    public static void RemoveVeterinarian()
     {
         Console.WriteLine("\n--- 💤 Deactivate Veterinarian ---");
         ViewVeterinarians(vetList);

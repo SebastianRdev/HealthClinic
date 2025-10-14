@@ -53,7 +53,7 @@ public class CustomerMenu
                         CustomerService.ViewCustomers();
                         continue;
                     case 3:
-                        CustomerService.UpdateCustomerMenu();
+                        CustomerService.UpdateCustomer();
                         continue;
                     case 4:
                         CustomerService.RemoveCustomer();

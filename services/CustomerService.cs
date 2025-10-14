@@ -110,7 +110,7 @@ public class CustomerService
         Console.Write("\nDo you want to update a pet? (y/n): ");
         if (Console.ReadLine()!.Trim().ToLower() == "y")
         {
-            PetService.ViewPets(customer.Pets);
+            // PetService.ViewPets(customer.Pets);
             Console.Write("\nEnter the Pet ID you want to update: ");
             string input = Console.ReadLine()!.Trim();
 
@@ -119,7 +119,7 @@ public class CustomerService
             if (!Validator.IsExist(pet, "❌ No pet found with that ID")) return;
             if (pet == null) return;
 
-            PetService.EditPet(pet);
+            // PetService.EditPet(pet);
             new RepositoryDict<Pet>().Update(pet);
             Console.WriteLine("\n✅ Pet updated successfully!");
         }

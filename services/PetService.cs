@@ -3,6 +3,7 @@ namespace HealthClinic.services;
 using HealthClinic.models;
 using HealthClinic.utils;
 using HealthClinic.repositories;
+using HealthClinic.interfaces;
 
 /// <summary>
 /// Service that manages the business logic related to pets in the HealthClinic system.
@@ -10,50 +11,43 @@ using HealthClinic.repositories;
 /// </summary>
 public class PetService
 {
+    private readonly IRepository<Pet> _petRepo;
+    private readonly IRepository<Customer> _customerRepo;
+
+    public PetService(
+        IRepository<Pet> petRepo,
+        IRepository<Customer> customerRepo)
+    {
+        _petRepo = petRepo;
+        _customerRepo = customerRepo;
+    }
+
     /// <summary>
     /// Register a new pet interactively
     /// </summary>
     /// <returns>Pet registered</returns>
-    public static Pet? RegisterPet()
+    public Pet? RegisterPet(Guid customerId, string petName, int petAge, string petSpecies, string petBreed)
     {
-        Console.WriteLine("\n--- 📝 Register Pet 🐕 ---");
+        // Validations
+        var customer = _customerRepo.GetById(customerId) ?? throw new KeyNotFoundException("Customer not found");
 
-        var customerRepo = new RepositoryDict<Customer>();
-        var customers = customerRepo.GetAll();
+        if (string.IsNullOrWhiteSpace(petName))
+            throw new ArgumentException("Pet name is required", nameof(petName));
 
-        if (!Validator.IsExist(customers, "⚠️  No customers available. Please register a customer first")) return null;
+        if (string.IsNullOrWhiteSpace(petSpecies))
+            throw new ArgumentException("Pet species is required", nameof(petSpecies));
+        
+        if (string.IsNullOrWhiteSpace(petBreed))
+            throw new ArgumentException("Pet breed is required", nameof(petBreed));
 
-        CustomerService.ShowAvailableCustomers(customers);
-
-        Customer? owner = null;
-        while (owner == null)
+        // New pet
+        var pet = new Pet(petName, petBreed, petSpecies, petAge)
         {
-            Console.Write("\nEnter the customer's ID for this pet: ");
-            string input = Console.ReadLine()!;
-
-            owner = customers.FirstOrDefault(c => c.Id.ToString().Equals(input, StringComparison.OrdinalIgnoreCase));
-
-            if (!Validator.IsExist(owner, "❌ No customer found with that ID. Try again")) continue;
-        }
-
-
-        string petName = Validator.ValidateContent("\n📛 Enter the pet's name: ");
-        string petSpecies = Validator.ValidateContent("\n🐕 Enter the pet's species: ");
-        string petBreed = Validator.ValidateContent("\n🐾 Enter the pet's breed (If you don't know, write: unknown): ");
-        int petAge = Validator.ValidatePositiveInt("\n🎂 Enter the pet's age: ");
-
-        Pet pet = new Pet(petName, petSpecies, petBreed, petAge)
-        {
-            Owner = owner
+            Owner = customer
         };
 
-        var petRepo = new Repository<Pet>();
-        petRepo.Add(pet);
-        pet.Register();
-
-        owner.Pets.Add(pet);
-
-        Console.WriteLine($"\n✅ Pet '{pet.Name}' successfully registered and assigned to {owner.Name}.");
+        _petRepo.Add(pet);
+        customer.Pets.Add(pet);
 
         return pet;
     }
@@ -62,101 +56,71 @@ public class PetService
     /// <summary>
     /// Displays the list of pets and their owners on the console.
     /// </summary>
-    public static void ViewPets(List<Pet> PetList)
+    /// <returns>A list of all pets.</returns>
+    public List<Pet> ViewPets()
     {
-        if (!Validator.IsExist(PetList, "⚠️  No pets found")) return;
-
-        Console.WriteLine("\n--- 🐾 Pets List ---");
-        foreach (var pet in PetList)
-        {
-            Console.WriteLine($"\n🆔 ID: {pet.Id}");
-            Console.WriteLine($"🐶 Name: {pet.Name}");
-            Console.WriteLine($"📚 Species: {pet.Species}");
-            Console.WriteLine($"🐈 Breed: {pet.Breed}");
-            Console.WriteLine($"🎂 Age: {pet.Age} años");
-            Console.WriteLine($"👤 Owner: {pet.Owner?.Name} (🆔 {pet.Owner?.Id})");
-        }
+        return _petRepo.GetAll().ToList();
     }
 
     /// <summary>
     /// Edits the information of an existing pet.
     /// </summary>
-    public static Pet EditPet(Pet pet)
+    public void UpdatePet(
+        Guid petId,
+        Guid? newCustomerId = null,
+        string? newPetName = null,
+        int? newPetAge = null,
+        string? newPetSpecies = null,
+        string? newPetBreed = null)
     {
-        Console.WriteLine("\n--- 📝 Update Pet 🐕 ---");
+        var pet = _petRepo.GetById(petId)
+            ?? throw new KeyNotFoundException("Pet not found");
 
-        string petName = Validator.ValidateContentEmpty("\n📛 New name (leave empty to keep current): ", allowEmpty: true);
-        if (!string.IsNullOrWhiteSpace(petName)) pet.Name = petName;
+        if (newCustomerId.HasValue)
+        {
+            var customer = _customerRepo.GetById(newCustomerId.Value)
+                ?? throw new KeyNotFoundException("Customer not found");
+            pet.Owner = customer;
+        }
 
-        string petSpecies = Validator.ValidateContentEmpty("\n🐕 New species (leave empty to keep current): ", allowEmpty: true);
-        if (!string.IsNullOrWhiteSpace(petSpecies)) pet.Species = petSpecies;
+        if (!string.IsNullOrWhiteSpace(newPetName))
+            pet.Name = newPetName;
 
-        string petBreed = Validator.ValidateContentEmpty("\n🐾 New breed (leave empty to keep current): ", allowEmpty: true);
-        if (!string.IsNullOrWhiteSpace(petBreed)) pet.Breed = petBreed;
+        if (newPetAge.HasValue)
+        {
+            if (newPetAge.Value < 0)
+                throw new ArgumentException("Pet age cannot be negative");
+            pet.Age = newPetAge.Value;
+        }
 
-        string petAgeInput = Validator.ValidateContentEmpty("\n🎂 New age (leave empty to keep current): ", allowEmpty: true);
-        if (int.TryParse(petAgeInput, out int petAge)) pet.Age = petAge;
+        if (!string.IsNullOrWhiteSpace(newPetSpecies))
+            pet.Species = newPetSpecies;
 
-        Console.WriteLine($"✅ Pet '{pet.Name}' updated successfully.");
-        return pet;
-    }
+        if (!string.IsNullOrWhiteSpace(newPetBreed))
+            pet.Breed = newPetBreed;
 
-    /// <summary>
-    /// Updates an existing pet interactively.
-    /// <summary>
-    public static void UpdatedPet(List<Pet> petList)
-    {
-        Console.WriteLine("\n--- 📝 Update Pet ---");
-
-        ViewPets(petList);
-
-        Console.Write("\nEnter the Pet ID you want to update: ");
-        string petIdInput = Console.ReadLine()!.Trim();
-
-        var pet = petList.FirstOrDefault(p => p.Id.ToString() == petIdInput);
-        if (!Validator.IsExist(pet, "❌ No pet found with that ID")) return;
-        if (pet == null) return;
-
-        Pet updatedPet = EditPet(pet);
-
-        var petRepo = new Repository<Pet>();
-        petRepo.Update(updatedPet);
-
-        Console.WriteLine("✅ Pet updated successfully!");
+        _petRepo.Update(pet);
     }
 
     /// <summary>
     /// Removes a pet from the system, disassociating it from its owner if necessary
-    /// <summary>
-    public static void RemovePet(List<Pet> petList)
+    /// </summary>
+    public void RemovePet(Guid petId)
     {
-        Console.WriteLine("\n--- 📝 Remove Pet ---");
+        var pet = _petRepo.GetById(petId)
+            ?? throw new KeyNotFoundException("Pet not found");
 
-        ViewPets(petList);
-
-        Console.Write("\nEnter the Pet ID you want to remove: ");
-        string petIdInput = Console.ReadLine()!.Trim();
-
-        var pet = petList.FirstOrDefault(p => p.Id.ToString() == petIdInput);
-        if (!Validator.IsExist(pet, "❌ No pet found with that ID")) return;
-        if (pet == null) return;
-
-        Console.WriteLine($"🗑️ Removing pet: {pet.Name} (ID: {pet.Id})");
-
-        // Disassociate the pet owner
-        if (pet.Owner != null)
-        {
-            Console.WriteLine($"🐾 Disassociating pet: {pet.Name} from owner: {pet.Owner.Name}");
-            pet.Owner.Pets.Remove(pet);
-            pet.Owner = null;
-        }
-
-        petList.Remove(pet);
-
-        Console.WriteLine($"✅ Pet '{pet.Name}' has been successfully removed.");
+        _petRepo.Remove(pet.Id);
     }
 
-
+    /// <summary>
+    /// Gets all customers from the repository.
+    /// </summary>
+    /// <returns>A list of all customers.</returns>
+    public List<Customer> GetAllCustomers()
+    {
+        return _customerRepo.GetAll().ToList();
+    }
 
 
 
@@ -249,7 +213,7 @@ public class PetService
             sortedPets = PetList.OrderBy(c => c.Name).ToList();
         else
             sortedPets = PetList.OrderByDescending(c => c.Name).ToList();
-        ViewPets(sortedPets);
+        // ViewPets(sortedPets);
         Console.WriteLine("----------------------------------------------------");
     }
 
@@ -267,7 +231,7 @@ public class PetService
             sortedPets = PetList.OrderBy(c => c.Age).ToList();
         else
             sortedPets = PetList.OrderByDescending(c => c.Age).ToList();
-        ViewPets(sortedPets);
+        // ViewPets(sortedPets);
         Console.WriteLine("----------------------------------------------------");
     }
 
@@ -285,7 +249,7 @@ public class PetService
             sortedPets = PetList.OrderBy(c => c.Species).ToList();
         else
             sortedPets = PetList.OrderByDescending(c => c.Species).ToList();
-        ViewPets(sortedPets);
+        // ViewPets(sortedPets);
         Console.WriteLine("----------------------------------------------------");
     }
 
