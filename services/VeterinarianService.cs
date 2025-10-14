@@ -107,4 +107,12 @@ public class VeterinarianService
 
         _veterinarianRepo.Remove(veterinarian.Id);
     }
+
+    /// <summary>
+    /// Returns a single veterinarian by ID.
+    /// </summary>
+    public Veterinarian? GetVeterinarianById(Guid id)
+    {
+        return _veterinarianRepo.GetById(id);
+    }
 }

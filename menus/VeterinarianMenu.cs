@@ -127,43 +127,41 @@ public class VeterinarianMenu
 
     private void RegisterVeterinarianUI()
     {
+        Console.WriteLine("\n--- 📝 Register Veterinarian 👨‍⚕️ ---");
+
         try
         {
-            Console.WriteLine("\n--- 📝 Register Veterinarian ---");
-
-            Console.Write("\n👤 Name: ");
-            string vetName = Console.ReadLine()!.Trim();
-
-            Console.Write("\n🎂 Age: ");
-            int vetAge = int.Parse(Console.ReadLine()!.Trim());
-
-            Console.Write("\n🏠 Address: ");
-            string vetAddress = Console.ReadLine()!.Trim();
-
-            Console.Write("\n📞 Phone: ");
-            string vetPhone = Console.ReadLine()!.Trim();
-
-            Console.Write("\n📧 Email: ");
-            string vetEmail = Console.ReadLine()!.Trim();
+            string vetName = Validator.ValidateContent("\n👤 Enter veterinarian's name: ");
+            int vetAge = Validator.ValidatePositiveInt("🎂 Enter veterinarian's age: ");
+            string vetAddress = Validator.ValidateContent("🏠 Enter veterinarian's address: ");
+            string vetPhone = Validator.ValidateContent("📞 Enter veterinarian's phone: ");
+            string vetEmail = Validator.ValidateContent("📧 Enter veterinarian's email: ");
 
             Console.WriteLine("\n🧼 --- Specialties ---");
             foreach (var specialty in Enum.GetValues(typeof(Specialties)))
                 Console.WriteLine($"{(int)specialty}. {specialty}");
 
-            Console.Write("\nEnter specialty (number): ");
-            int specialtyInt = int.Parse(Console.ReadLine()!.Trim());
+            int specialtyInt = Validator.ValidatePositiveInt("\nEnter specialty (number): ");
+            if (!Enum.IsDefined(typeof(Specialties), specialtyInt))
+            {
+                Console.WriteLine("⚠️  Invalid specialty number");
+                return;
+            }
             var specialtyType = (Specialties)specialtyInt;
 
-            Console.Write("\n🔢 License number: ");
-            string vetLicense = Console.ReadLine()!.Trim();
+            string vetLicense = Validator.ValidateContent("🔢 Enter license number: ");
 
-            // Register veterinarian
-            var veterinarian = _veterinarianService.RegisterVeterinarian(vetName, vetAge, vetAddress, vetPhone, vetEmail, specialtyType, vetLicense);
+            var veterinarian = _veterinarianService.RegisterVeterinarian(
+                vetName,
+                vetAge,
+                vetAddress,
+                vetPhone,
+                vetEmail,
+                specialtyType,
+                vetLicense
+            );
+
             Console.WriteLine($"\n✅ Veterinarian registered successfully with ID: {veterinarian.Id}");
-        }
-        catch (FormatException)
-        {
-            Console.WriteLine("❌ Invalid input format. Please enter the data correctly");
         }
         catch (KeyNotFoundException ex)
         {
@@ -178,6 +176,7 @@ public class VeterinarianMenu
             Console.WriteLine($"❌ Unexpected error: {ex.Message}");
         }
     }
+
 
     private void ViewVeterinariansUI()
     {
@@ -203,116 +202,108 @@ public class VeterinarianMenu
     }
 
     private void UpdateVeterinarianUI()
-    {
-        Console.WriteLine("\n--- ✏️  Update Veterinarian ---");
+{
+    Console.WriteLine("\n--- ✏️  Update Veterinarian 👨‍⚕️ ---");
 
+    try
+    {
         ViewVeterinariansUI();
 
-        Console.Write("\nEnter Veterinarian ID: ");
-        var idInput = Console.ReadLine();
-
+        string idInput = Validator.ValidateContent("\nEnter Veterinarian ID: ");
         if (!Guid.TryParse(idInput, out Guid veterinarianId))
         {
-            Console.WriteLine("⚠️  Invalid ID format");
+            Console.WriteLine("⚠️ Invalid ID format");
             return;
         }
 
-        string? newVetName = null;
-        int? newVetAge = null;
-        string? newVetAddress = null;
-        string? newVetPhone = null;
-        string? newVetEmail = null;
-        Specialties? newSpecialty = null;
-        string? newVetLicense = null;
-
-        // Update Name
-        Console.Write("Update Name? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
+        // Obtener veterinario actual
+        var vet = _veterinarianService.GetVeterinarianById(veterinarianId);
+        if (vet == null)
         {
-            Console.Write("Enter new name: ");
-            newVetName = Console.ReadLine();
+            Console.WriteLine("❌ No veterinarian found with that ID");
+            return;
         }
 
-        // Update Age
-        Console.Write("Update Age? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            Console.Write("Enter new age: ");
-            var ageInput = Console.ReadLine();
-            if (int.TryParse(ageInput, out int age))
-                newVetAge = age;
-            else
-                Console.WriteLine("⚠️  Invalid age format. Age not updated");
-        }
+        Console.WriteLine($"\nCurrent data for {vet.Name}:");
+        Console.WriteLine($"👤 Name: {vet.Name}");
+        Console.WriteLine($"🎂 Age: {vet.Age}");
+        Console.WriteLine($"🏠 Address: {vet.Address}");
+        Console.WriteLine($"📞 Phone: {vet.Phone}");
+        Console.WriteLine($"📧 Email: {vet.Email}");
+        Console.WriteLine($"🧼 Specialty: {vet.Specialty}");
+        Console.WriteLine($"🔢 License: {vet.LicenseNumber}");
 
-        // Update Address
-        Console.Write("Update Address? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            Console.Write("Enter new address: ");
-            newVetAddress = Console.ReadLine();
-        }
+        Console.WriteLine("\nUpdate fields (y/n):");
 
-        // Update Phone
-        Console.Write("Update Phone? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            Console.Write("Enter new phone: ");
-            newVetPhone = Console.ReadLine();
-        }
+        string name = vet.Name;
+        int age = vet.Age;
+        string address = vet.Address;
+        string phone = vet.Phone;
+        string email = vet.Email;
+        Specialties specialty = vet.Specialty;
+        string license = vet.LicenseNumber;
 
-        // Update Email
-        Console.Write("Update Email? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
+        if (Validator.AskYesNo("Change name? (y/n): "))
+            name = Validator.ValidateContent("👤 Enter new name: ");
+        
+        if (Validator.AskYesNo("Change age? (y/n): "))
+            age = Validator.ValidatePositiveInt("🎂 Enter new age: ");
+        
+        if (Validator.AskYesNo("Change address? (y/n): "))
+            address = Validator.ValidateContent("🏠 Enter new address: ");
+        
+        if (Validator.AskYesNo("Change phone? (y/n): "))
+            phone = Validator.ValidateContent("📞 Enter new phone: ");
+        
+        if (Validator.AskYesNo("Change email? (y/n): "))
+            email = Validator.ValidateContent("📧 Enter new email: ");
+        
+        if (Validator.AskYesNo("Change specialty? (y/n): "))
         {
-            Console.Write("Enter new email: ");
-            newVetEmail = Console.ReadLine();
-        }
-
-        // Update specialty
-        Console.Write("Update Specialty? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            Console.WriteLine("\nSpecialties:");
+            Console.WriteLine("\n🧼 --- Specialties ---");
             foreach (var s in Enum.GetValues(typeof(Specialties)))
                 Console.WriteLine($"{(int)s}. {s}");
 
-            Console.Write("Select specialty number: ");
-            if (int.TryParse(Console.ReadLine(), out int specialtyInt) &&
-                Enum.IsDefined(typeof(Specialties), specialtyInt))
-                newSpecialty = (Specialties)specialtyInt;
+            int specialtyInt = Validator.ValidatePositiveInt("\nSelect specialty number: ");
+            if (Enum.IsDefined(typeof(Specialties), specialtyInt))
+                specialty = (Specialties)specialtyInt;
             else
-                Console.WriteLine("⚠️  Invalid specialty number");
+            {
+                Console.WriteLine("⚠️ Invalid specialty number. Specialty not changed.");
+            }
         }
 
-        // Update License
-        Console.Write("Update License? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            Console.Write("Enter new license: ");
-            newVetLicense = Console.ReadLine();
-        }
+        
+        if (Validator.AskYesNo("Change license? (y/n): "))
+            license = Validator.ValidateContent("🔢 Enter new license number: ");
 
-        try
-        {
-            _veterinarianService.UpdateVeterinarian(
-                veterinarianId,
-                newVetName,
-                newVetAge,
-                newVetAddress,
-                newVetPhone,
-                newVetEmail,
-                newSpecialty,
-                newVetLicense
-            );
+        _veterinarianService.UpdateVeterinarian(
+            veterinarianId,
+            name,
+            age,
+            address,
+            phone,
+            email,
+            specialty,
+            license
+        );
 
-            Console.WriteLine("\n✅ Veterinarian updated successfully");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ Error: {ex.Message}");
-        }
+        Console.WriteLine("\n✅ Veterinarian updated successfully!");
     }
+    catch (FormatException)
+    {
+        Console.WriteLine("⚠️ Invalid format. Please enter valid data.");
+    }
+    catch (KeyNotFoundException)
+    {
+        Console.WriteLine("❌ No veterinarian found with that ID.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"❌ Error updating veterinarian: {ex.Message}");
+    }
+}
+
 
     private void RemoveVeterinarianUI()
     {

@@ -8,7 +8,7 @@ using HealthClinic.repositories;
 /// Service that manages customer-related business logic in the HealthClinic system.
 /// Handles registration, updates, deletion, and viewing of customers and their pets.
 /// </summary>
-public class CustomerService
+public class CustomerService  // AL ELIMINAR UN PET NO SE ELIMINA DEL DUEÑO
 {
     private readonly IRepository<Customer> _customerRepo;
     private readonly IRepository<Pet> _petRepo;
@@ -93,51 +93,49 @@ public class CustomerService
     }
 
     /// <summary>
-    /// Filters customers who have pets of a specific age.
+    /// Filters customers who have pets of a specific name, age, address.
     /// </summary>
-    public List<Customer> FilterCustomersByPetAge(int petAge)
+    public IEnumerable<Customer> SortCustomers(int criteria, int order)
+    {
+        var customers = _customerRepo.GetAll().ToList();
+        if (!customers.Any())
+            throw new InvalidOperationException("No customers found");
+
+        return criteria switch
+        {
+            1 => order == 1 ? customers.OrderBy(c => c.Name) : customers.OrderByDescending(c => c.Name),
+            2 => order == 1 ? customers.OrderBy(c => c.Age) : customers.OrderByDescending(c => c.Age),
+            3 => order == 1 ? customers.OrderBy(c => c.Address) : customers.OrderByDescending(c => c.Address),
+            _ => customers
+        };
+    }
+
+    public IEnumerable<IGrouping<string, Customer>> GroupCustomersByAddress()
     {
         var customers = _customerRepo.GetAll();
-        return customers
-            .Where(c => c.Pets.Any(p => p.Age == petAge))
-            .ToList();
+        if (!customers.Any())
+            throw new InvalidOperationException("No customers found");
+
+        return customers.GroupBy(c => c.Address);
     }
 
-    /// <summary>
-    /// Gets the youngest customer.
-    /// </summary>
-    public Customer? GetYoungestCustomer()
+    public IEnumerable<Customer> FilterCustomersByAge(int minAge)
     {
-        return _customerRepo.GetAll().OrderBy(c => c.Age).FirstOrDefault();
+        var customers = _customerRepo.GetAll();
+        var filtered = customers.Where(c => c.Age >= minAge).ToList();
+
+        if (!filtered.Any())
+            throw new InvalidOperationException("No customers found with the given age criteria");
+
+        return filtered;
     }
 
-    /// <summary>
-    /// Gets the oldest customer.
-    /// </summary>
-    public Customer? GetOldestCustomer()
+    public Customer GetOldestCustomer()
     {
-        return _customerRepo.GetAll().OrderByDescending(c => c.Age).FirstOrDefault();
-    }
+        var customers = _customerRepo.GetAll();
+        if (!customers.Any())
+            throw new InvalidOperationException("No customers found");
 
-    /// <summary>
-    /// Gets customers who have at least one pet of unknown breed.
-    /// </summary>
-    public List<Customer> GetCustomersWithUnknownPetBreed()
-    {
-        return _customerRepo
-            .GetAll()
-            .Where(c => c.Pets.Any(p => p.Breed.Equals("unknown", StringComparison.OrdinalIgnoreCase)))
-            .ToList();
-    }
-
-    /// <summary>
-    /// Returns customers sorted alphabetically by name (uppercase).
-    /// </summary>
-    public List<Customer> GetCustomersAlphabetically()
-    {
-        return _customerRepo
-            .GetAll()
-            .OrderBy(c => c.Name.ToUpper())
-            .ToList();
+        return customers.OrderByDescending(c => c.Age).First();
     }
 }

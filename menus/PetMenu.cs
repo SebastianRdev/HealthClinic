@@ -65,7 +65,7 @@ public class PetMenu
                         ViewPetsUI();
                         continue;
                     case 3:
-                        UpdatedPetUI();
+                        UpdatePetUI();
                         continue;
                     case 4:
                         RemovePetUI();
@@ -89,54 +89,36 @@ public class PetMenu
 
     private void RegisterPetUI()
     {
+        Console.WriteLine("\n--- 📝 Register Pet 🐕 ---");
+
         try
         {
-            Console.WriteLine("\n--- 📝 Register Pet 🐕 ---");
-
-            // Show all customers
+            // Mostrar clientes disponibles
             var customers = _petService.GetAllCustomers();
             if (customers.Count == 0)
             {
-                Console.WriteLine("⚠️  No customers available. Please register one first");
+                Console.WriteLine("⚠️ No customers available. Please register one first");
                 return;
             }
 
-            Console.WriteLine("\n --- Customer List ---");
+            Console.WriteLine("\n--- 👥 Customer List ---");
             foreach (var c in customers)
-                Console.WriteLine($"ID: {c.Id} | Name: {c.Name}");
+                Console.WriteLine($"🆔 {c.Id} | 👤 {c.Name} | 📞 {c.Phone}");
 
-            Console.Write("\nEnter customer ID: ");
-            Guid customerId = Guid.Parse(Console.ReadLine()!.Trim());
+            string customerInput = Validator.ValidateContent("\nEnter Customer ID: ");
+            if (!Guid.TryParse(customerInput, out Guid customerId))
+            {
+                Console.WriteLine("⚠️ Invalid ID format. Please enter a valid GUID.");
+                return;
+            }
 
-            Console.Write("\n📛 Name: ");
-            string petName = Console.ReadLine()!.Trim();
+            string petName = Validator.ValidateContent("\n📛 Enter pet's name: ");
+            int petAge = Validator.ValidatePositiveInt("🎂 Enter pet's age: ");
+            string petSpecies = Validator.ValidateContent("🐕 Enter pet's species: ");
+            string petBreed = Validator.ValidateContent("🐾 Enter pet's breed (or 'unknown' if not sure): ");
 
-            Console.Write("\n🎂 Age: ");
-            int petAge = int.Parse(Console.ReadLine()!.Trim());
-
-            Console.Write("\n🐕 Species: ");
-            string petSpecies = Console.ReadLine()!.Trim();
-
-            Console.Write("\n🐾 Breed (If you don't know, write: unknown): ");
-            string petBreed = Console.ReadLine()!.Trim();
-
-            
-            // // 🧼 Mostrar servicios disponibles
-            // Console.WriteLine("\n🧼 --- Available Services ---");
-            // foreach (var service in Enum.GetValues(typeof(ServiceType)))
-            //     Console.WriteLine($"{(int)service}. {service}");
-
-            // Console.Write("\nEnter service type (number): ");
-            // int serviceInt = int.Parse(Console.ReadLine()!.Trim());
-            // var serviceType = (ServiceType)serviceInt;
-
-            // Register pet
             var pet = _petService.RegisterPet(customerId, petName, petAge, petSpecies, petBreed);
             Console.WriteLine($"\n✅ Pet registered successfully with ID: {pet.Id}");
-        }
-        catch (FormatException)
-        {
-            Console.WriteLine("❌ Invalid input format. Please enter the data correctly");
         }
         catch (KeyNotFoundException ex)
         {
@@ -151,6 +133,7 @@ public class PetMenu
             Console.WriteLine($"❌ Unexpected error: {ex.Message}");
         }
     }
+
 
     private void ViewPetsUI()
     {
@@ -172,100 +155,105 @@ public class PetMenu
         }
     }
 
-    private void UpdatedPetUI()
+    private void UpdatePetUI()
     {
         Console.WriteLine("\n--- ✏️  Update Pet ---");
-
-        ViewPetsUI();
-
-        Console.Write("\nEnter Pet ID: ");
-        var idInput = Console.ReadLine();
-
-        if (!Guid.TryParse(idInput, out Guid petId))
+        try
         {
-            Console.WriteLine("⚠️  Invalid ID format");
-            return;
-        }
+            ViewPetsUI();
 
-        Guid? newCustomerId = null;
-        string? newPetName = null;
-        int? newPetAge = null;
-        string? newPetSpecies = null;
-        string? newPetBreed = null;
+            Console.Write("\nEnter Pet ID: ");
+            var idInput = Console.ReadLine();
 
-        // Update customer
-        Console.Write("Update Customer? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            // Show all customers
-            var customers = _petService.GetAllCustomers();
-            if (customers.Count == 0)
+            if (!Guid.TryParse(idInput, out Guid petId))
             {
-                Console.WriteLine("⚠️ No customers available. Please register one first");
+                Console.WriteLine("⚠️  Invalid ID format");
                 return;
             }
 
-            Console.Write("Enter new Customer ID: ");
-            if (Guid.TryParse(Console.ReadLine(), out Guid customerId))
-                newCustomerId = customerId;
-            else
-                Console.WriteLine("⚠️  Invalid Customer ID format");
-        }
+            // Obtener la mascota actual
+            var pet = _petService.GetPetById(petId);
+            if (pet == null)
+            {
+                Console.WriteLine("❌ No pet found with that ID");
+                return;
+            }
 
-        // Update Name
-        Console.Write("Update Name? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            Console.Write("Enter new name: ");
-            newPetName = Console.ReadLine();
-        }
+            Console.WriteLine($"\nCurrent data for {pet.Name}:");
+            Console.WriteLine($"👤 Owner: {pet.Owner?.Name ?? "No owner"}");
+            Console.WriteLine($"🐾 Name: {pet.Name}");
+            Console.WriteLine($"🎂 Age: {pet.Age}");
+            Console.WriteLine($"🧬 Species: {pet.Species}");
+            Console.WriteLine($"🐕 Breed: {pet.Breed}");
 
-        // Update Age
-        Console.Write("Update Age? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            Console.Write("Enter new age: ");
-            var ageInput = Console.ReadLine();
-            if (int.TryParse(ageInput, out int age))
-                newPetAge = age;
-            else
-                Console.WriteLine("⚠️  Invalid age format. Age not updated");
-        }
+            Console.WriteLine("\nUpdate fields (y/n):");
 
-        // Update Species
-        Console.Write("Update Species? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            Console.Write("Enter new species: ");
-            newPetSpecies = Console.ReadLine();
-        }
+            Guid? newCustomerId = pet.Owner?.Id;
+            string petName = pet.Name;
+            int petAge = pet.Age;
+            string petSpecies = pet.Species;
+            string petBreed = pet.Breed;
 
-        // Update Breed
-        Console.Write("Update Breed? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            Console.Write("Enter new breed: ");
-            newPetBreed = Console.ReadLine();
-        }
+            if (Validator.AskYesNo("Change owner? (y/n): "))
+            {
+                var customers = _petService.GetAllCustomers();
+                if (customers.Count == 0)
+                {
+                    Console.WriteLine("⚠️ No customers available. Please register one first");
+                    return;
+                }
 
-        try
-        {
+                Console.WriteLine("\n--- 👥 Available Customers ---");
+                foreach (var c in customers)
+                {
+                    Console.WriteLine($"🆔 {c.Id} | 👤 {c.Name} | 📞 {c.Phone}");
+                }
+
+                Console.Write("\nEnter new Customer ID: ");
+                var customerInput = Console.ReadLine();
+                if (Guid.TryParse(customerInput, out Guid customerId))
+                    newCustomerId = customerId;
+                else
+                    Console.WriteLine("⚠️ Invalid Customer ID format. Owner not changed.");
+            }
+
+            if (Validator.AskYesNo("Change name? (y/n): "))
+                petName = Validator.ValidateContent("🐾 Enter new name: ");
+
+            if (Validator.AskYesNo("Change age? (y/n): "))
+                petAge = Validator.ValidatePositiveInt("🎂 Enter new age: ");
+            
+            if (Validator.AskYesNo("Change species? (y/n): "))
+                petSpecies = Validator.ValidateContent("🧬 Enter new species: ");
+            
+            if (Validator.AskYesNo("Change breed? (y/n): "))
+                petBreed = Validator.ValidateContent("🐕 Enter new breed: ");
+
             _petService.UpdatePet(
                 petId,
                 newCustomerId,
-                newPetName,
-                newPetAge,
-                newPetSpecies,
-                newPetBreed
+                petName,
+                petAge,
+                petSpecies,
+                petBreed
             );
 
-            Console.WriteLine("\n✅ Pet updated successfully.");
+            Console.WriteLine("\n✅ Pet updated successfully!");
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("⚠️ Invalid ID format. Please enter a valid value");
+        }
+        catch (KeyNotFoundException)
+        {
+            Console.WriteLine("❌ No pet found with that ID.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Error: {ex.Message}");
+            Console.WriteLine($"❌ Error updating pet: {ex.Message}");
         }
     }
+
 
     private void RemovePetUI()
     {

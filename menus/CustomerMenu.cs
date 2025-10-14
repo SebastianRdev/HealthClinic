@@ -183,8 +183,10 @@ public class CustomerMenu
     private void UpdateCustomerUI()
     {
         Console.WriteLine("\n--- ✏️  Update Customer ---");
+
         try
         {
+            // Mostrar clientes disponibles
             ViewCustomersUI();
 
             Console.Write("\nEnter Customer ID: ");
@@ -196,7 +198,7 @@ public class CustomerMenu
                 return;
             }
 
-            // Obtener el cliente actual
+            // Buscar cliente
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
             {
@@ -204,6 +206,7 @@ public class CustomerMenu
                 return;
             }
 
+            // Mostrar datos actuales
             Console.WriteLine($"\nCurrent data for {customer.Name}:");
             Console.WriteLine($"👤 Name: {customer.Name}");
             Console.WriteLine($"🎂 Age: {customer.Age}");
@@ -212,22 +215,26 @@ public class CustomerMenu
 
             Console.WriteLine("\nUpdate fields (y/n):");
 
+            // Variables con valores actuales
             string name = customer.Name;
-            if (AskYesNo("Change name? (y/n): "))
+            int age = customer.Age;
+            string address = customer.Address;
+            string phone = customer.Phone;
+
+            // Preguntar uno a uno qué actualizar
+            if (Validator.AskYesNo("Change name? (y/n): "))
                 name = Validator.ValidateContent("👤 Enter new name: ");
 
-            int age = customer.Age;
-            if (AskYesNo("Change age? (y/n): "))
+            if (Validator.AskYesNo("Change age? (y/n): "))
                 age = Validator.ValidatePositiveInt("🎂 Enter new age: ");
 
-            string address = customer.Address;
-            if (AskYesNo("Change address? (y/n): "))
+            if (Validator.AskYesNo("Change address? (y/n): "))
                 address = Validator.ValidateContent("🏠 Enter new address: ");
 
-            string phone = customer.Phone;
-            if (AskYesNo("Change phone? (y/n): "))
+            if (Validator.AskYesNo("Change phone? (y/n): "))
                 phone = Validator.ValidateContent("📞 Enter new phone: ");
 
+            // Llamar al servicio para actualizar
             _customerService.UpdateCustomer(customerId, name, age, address, phone);
             Console.WriteLine("\n✅ Customer updated successfully!");
         }
@@ -245,15 +252,7 @@ public class CustomerMenu
         }
     }
 
-    /// <summary>
-    /// Helper para leer respuestas sí/no desde consola.
-    /// </summary>
-    private bool AskYesNo(string message)
-    {
-        Console.Write(message);
-        var response = Console.ReadLine()?.Trim().ToLower();
-        return response == "y" || response == "yes" || response == "s" || response == "si";
-    }
+
 
     private void RemoveCustomerUI()
     {

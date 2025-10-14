@@ -7,7 +7,7 @@ using HealthClinic.repositories;
 /// <summary>
 /// Service that manages appointment-related business logic.
 /// </summary>
-public class AppointmentService
+public class AppointmentService // MOSTRAR NOMBRES DE PET Y VET EN VIEW Y PREGUNTAR SI ESTA SEGURO DE METER ESE VET EN UNA ESPECIALIDAD Q NO ES LA DE EL
 {
     private readonly IRepository<Pet> _petRepo;
     private readonly IRepository<Veterinarian> _vetRepo;
@@ -156,4 +156,11 @@ public class AppointmentService
         return _vetRepo.GetAll().Where(v => v.IsActive).ToList();
     }
 
+    /// <summary>
+    /// Returns a single appointment by ID.
+    /// </summary>
+    public Appointment? GetAppointmentById(Guid id)
+    {
+        return _appointmentRepo.GetById(id);
+    }
 }

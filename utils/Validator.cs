@@ -125,4 +125,19 @@ public static class Validator
         return true;
     }
 
+    public static bool AskYesNo(string message)
+    {
+        while (true)
+        {
+            Console.Write(message);
+            var response = Console.ReadLine()?.Trim().ToLower();
+
+            if (response is "y" or "yes" or "s" or "si")
+                return true;
+            if (response is "n" or "no")
+                return false;
+
+            Console.WriteLine("⚠️ Please enter 'y' (yes) or 'n' (no).");
+        }
+    }
 }
