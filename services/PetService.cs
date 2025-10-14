@@ -34,6 +34,9 @@ public class PetService
         if (string.IsNullOrWhiteSpace(petName))
             throw new ArgumentException("Pet name is required", nameof(petName));
 
+        if (petAge < 0)
+            throw new ArgumentException("Pet age cannot be negative", nameof(petAge));
+
         if (string.IsNullOrWhiteSpace(petSpecies))
             throw new ArgumentException("Pet species is required", nameof(petSpecies));
         

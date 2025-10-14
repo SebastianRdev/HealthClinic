@@ -7,169 +7,104 @@ using HealthClinic.models.Enums;
 
 public class VeterinarianService
 {
-    static readonly Repository<Veterinarian> vetRepo = new();
-    static List<Veterinarian> vetList = vetRepo.GetAll();
+    private readonly IRepository<Veterinarian> _veterinarianRepo;
+
+    public VeterinarianService(IRepository<Veterinarian> veterinarianRepo)
+    {
+        _veterinarianRepo = veterinarianRepo;
+    }
 
     /// <summary>
     /// Registers a new veterinarian interactively.
     /// </summary>
-    public static Veterinarian? RegisterVeterinarian()
+    public Veterinarian RegisterVeterinarian(string name, int age, string address, string phone, string email, Specialties specialty, string license)
     {
-        Console.WriteLine("\n--- 📝 Register Veterinarian 🩺 ---");
+        // Validations
+        if (string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Name is required", nameof(name));
 
-        string name = Validator.ValidateContent("\n👤 Veterinarian name: ");
-        int age = Validator.ValidatePositiveInt("\n🎂 Age: ");
-        string address = Validator.ValidateContent("\n🏠 Address: ");
-        string phone = Validator.ValidateContent("\n📞 Phone: ");
-        string email = Validator.ValidateContent("\n📧 Email: ");
-        string licenseNumber = Validator.ValidateContent("\n🔢 License number: ");
+        if (age < 0)
+            throw new ArgumentException("Veterinarian age cannot be negative", nameof(age));
 
-        Console.WriteLine("\nSpecialty:");
-        foreach (var value in Enum.GetValues(typeof(Specialties)))
-        {
-            Console.WriteLine($"{(int)value}. {value}");
-        }
-        int specialtyInt = Validator.ValidatePositiveInt("\nSelect specialty number: ");
-        Specialties specialty = Enum.IsDefined(typeof(Specialties), specialtyInt) ? (Specialties)specialtyInt : Specialties.General;
+        if (string.IsNullOrWhiteSpace(address))
+            throw new ArgumentException("Address is required", nameof(address));
 
-        Veterinarian vet = new Veterinarian(name, age, address, phone, email, licenseNumber, specialty);
+        if (string.IsNullOrWhiteSpace(phone))
+            throw new ArgumentException("Phone is required", nameof(phone));
 
-        var vetRepo = new Repository<Veterinarian>();
-        vetRepo.Add(vet);
+        if (string.IsNullOrWhiteSpace(email))
+            throw new ArgumentException("Email is required", nameof(email));
 
-        vet.Register();
-        return vet;
+        if (string.IsNullOrWhiteSpace(license))
+            throw new ArgumentException("License is required", nameof(license));
+
+        // New veterinarian
+        var veterinarian = new Veterinarian(name, age, address, phone, email, license, specialty);
+
+        _veterinarianRepo.Add(veterinarian);
+        return veterinarian;
     }
 
     /// <summary>
     /// Shows the list of veterinarians.
     /// </summary>
-    public static void ViewVeterinarians()
+    public List<Veterinarian> ViewVeterinarians()
     {
-        if (!Validator.IsExist(vetList, "⚠️  No veterinarians registered")) return;
-
-        Console.WriteLine("\n--- 🩺 Veterinarian List ---");
-        foreach (var vet in vetList)
-        {
-            Console.WriteLine($"\n🆔 ID: {vet.Id}");
-            Console.WriteLine($"👤 Name: {vet.Name}");
-            Console.WriteLine($"🎂 Age: {vet.Age}");
-            Console.WriteLine($"🏠 Address: {vet.Address}");
-            Console.WriteLine($"📞 Phone: {vet.Phone}");
-            Console.WriteLine($"📧 Email: {vet.Email}");
-            Console.WriteLine($"🔢 License: {vet.LicenseNumber}");
-            Console.WriteLine($"🩺 Specialty: {vet.Specialty}");
-            Console.WriteLine($"✅ Active: {(vet.IsActive ? "Yes" : "No")}");
-        }
-    }
-
-    /// <summary>
-    /// Shows the list of veterinarians.
-    /// <param name="vetList">List of veterinarians</param>
-    /// </summary>
-    public static void ViewVeterinarians(List<Veterinarian> vetList)
-    {
-        if (!Validator.IsExist(vetList, "⚠️  No veterinarians registered")) return;
-
-        Console.WriteLine("\n--- 🩺 Veterinarian List ---");
-        foreach (var vet in vetList)
-        {
-            Console.WriteLine($"\n🆔 ID: {vet.Id}");
-            Console.WriteLine($"👤 Name: {vet.Name}");
-            Console.WriteLine($"🎂 Age: {vet.Age}");
-            Console.WriteLine($"🏠 Address: {vet.Address}");
-            Console.WriteLine($"📞 Phone: {vet.Phone}");
-            Console.WriteLine($"📧 Email: {vet.Email}");
-            Console.WriteLine($"🔢 License: {vet.LicenseNumber}");
-            Console.WriteLine($"🩺 Specialty: {vet.Specialty}");
-            Console.WriteLine($"✅ Active: {(vet.IsActive ? "Yes" : "No")}");
-        }
-    }
-
-    /// <summary>
-    /// Edits veterinarian data.
-    /// </summary>
-    public static Veterinarian EditVeterinarian(Veterinarian vet)
-    {
-        Console.WriteLine("\n--- 📝 Update Veterinarian ---");
-
-        string name = Validator.ValidateContentEmpty("\n👤 New name (leave empty to keep): ", allowEmpty: true);
-        if (!string.IsNullOrWhiteSpace(name)) vet.Name = name;
-
-        string ageInput = Validator.ValidateContentEmpty("\n🎂 New age (leave empty to keep): ", allowEmpty: true);
-        if (int.TryParse(ageInput, out int age)) vet.Age = age;
-
-        string address = Validator.ValidateContentEmpty("\n🏠 New address (leave empty to keep): ", allowEmpty: true);
-        if (!string.IsNullOrWhiteSpace(address)) vet.Address = address;
-
-        string phone = Validator.ValidateContentEmpty("\n📞 New phone (leave empty to keep): ", allowEmpty: true);
-        if (!string.IsNullOrWhiteSpace(phone)) vet.Phone = phone;
-
-        string email = Validator.ValidateContentEmpty("\n📧 New email (leave empty to keep): ", allowEmpty: true);
-        if (!string.IsNullOrWhiteSpace(email)) vet.Email = email;
-
-        Console.WriteLine("\nDo you want to change the specialty? (y/n): ");
-        if (Console.ReadLine()!.Trim().ToLower() == "y")
-        {
-            foreach (var value in Enum.GetValues(typeof(Specialties)))
-            {
-                Console.WriteLine($"{(int)value}. {value}");
-            }
-            int specialtyInt = Validator.ValidatePositiveInt("\nSelect specialty number: ");
-            if (Enum.IsDefined(typeof(Specialties), specialtyInt))
-                vet.Specialty = (Specialties)specialtyInt;
-        }
-        return vet;
+        return _veterinarianRepo.GetAll().ToList();
     }
 
     /// <summary>
     /// Updates a veterinarian in the list.
     /// </summary>
-    public static void UpdateVeterinarian()
+    public void UpdateVeterinarian(
+        Guid veterinarianId,
+        string? newVetName = null,
+        int? newVetAge = null,
+        string? newVetAddress = null,
+        string? newVetPhone = null,
+        string? newVetEmail = null,
+        Specialties? newSpecialty = null,
+        string? newVetLicense = null)
     {
-        Console.WriteLine("\n--- 📝 Update Veterinarian ---");
-        ViewVeterinarians(vetList);
+        var veterinarian = _veterinarianRepo.GetById(veterinarianId)
+            ?? throw new KeyNotFoundException("Veterinarian not found");
+        
+        if (!string.IsNullOrWhiteSpace(newVetName))
+            veterinarian.Name = newVetName;
 
-        Console.Write("\nEnter the ID of the veterinarian to update: ");
-        string vetIdInput = Console.ReadLine()!.Trim();
+        if (newVetAge.HasValue)
+        {
+            if (newVetAge.Value < 0)
+                throw new ArgumentException("Veterinarian age cannot be negative");
+            veterinarian.Age = newVetAge.Value;
+        }
 
-        var vet = vetList.FirstOrDefault(v => v.Id.ToString() == vetIdInput);
-        if (!Validator.IsExist(vet, "❌ No veterinarian found with that ID")) return;
-        if (vet == null) return;
+        if (!string.IsNullOrWhiteSpace(newVetAddress))
+            veterinarian.Address = newVetAddress;
 
-        Veterinarian updatedVet = EditVeterinarian(vet);
+        if (!string.IsNullOrWhiteSpace(newVetPhone))
+            veterinarian.Phone = newVetPhone;
 
-        var vetRepo = new Repository<Veterinarian>();
-        vetRepo.Update(updatedVet);
+        if (!string.IsNullOrWhiteSpace(newVetEmail))
+            veterinarian.Email = newVetEmail;
 
-        Console.WriteLine("✅ Veterinarian updated successfully!");
+        if (newSpecialty.HasValue)
+            veterinarian.Specialty = newSpecialty.Value;
+
+        if (!string.IsNullOrWhiteSpace(newVetLicense))
+            veterinarian.LicenseNumber = newVetLicense;
+
+        _veterinarianRepo.Update(veterinarian);
     }
 
     /// <summary>
     /// Removes a veterinarian from the list.
     /// </summary>
-    public static void RemoveVeterinarian()
+    public void RemoveVeterinarian(Guid veterinarianId)
     {
-        Console.WriteLine("\n--- 💤 Deactivate Veterinarian ---");
-        ViewVeterinarians(vetList);
+        var veterinarian = _veterinarianRepo.GetById(veterinarianId)
+            ?? throw new KeyNotFoundException("Veterinarian not found");
 
-        Console.Write("\nEnter the ID of the veterinarian to deactivate: ");
-        string vetIdInput = Console.ReadLine()!.Trim();
-
-        var vet = vetList.FirstOrDefault(v => v.Id.ToString() == vetIdInput);
-        if (!Validator.IsExist(vet, "❌ No veterinarian found with that ID")) return;
-        if (vet == null) return;
-
-        if (!vet.IsActive)
-        {
-            Console.WriteLine($"⚠️ Veterinarian '{vet.Name}' is already inactive");
-            return;
-        }
-
-        Console.WriteLine($"😴 Deactivating veterinarian: {vet.Name} (ID: {vet.Id})");
-
-        vet.IsActive = false;
-
-        Console.WriteLine($"✅ Veterinarian '{vet.Name}' has been marked as inactive");
+        _veterinarianRepo.Remove(veterinarian.Id);
     }
 }
